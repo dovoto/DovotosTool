@@ -59,5 +59,12 @@ namespace DovotosTool
 
             f.Show();
         }
+
+        private void DebuggerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form f = new Debugger();
+
+            f.Show();
+        }
     }
 }

@@ -30,23 +30,24 @@
         {
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.runToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pauseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.registersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.videoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cartridgeHeaderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.paletteViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.audioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.channel1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.triangleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.noiseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dMCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.registersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.videoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.controlsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.cartridgeHeaderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.paletteViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.debuggerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -75,27 +76,6 @@
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(54, 29);
             this.fileToolStripMenuItem.Text = "File";
             // 
-            // toolsToolStripMenuItem
-            // 
-            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.runToolStripMenuItem,
-            this.pauseToolStripMenuItem});
-            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(69, 29);
-            this.toolsToolStripMenuItem.Text = "Tools";
-            // 
-            // viewToolStripMenuItem
-            // 
-            this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ramToolStripMenuItem,
-            this.registersToolStripMenuItem,
-            this.videoToolStripMenuItem,
-            this.cartridgeHeaderToolStripMenuItem,
-            this.paletteViewerToolStripMenuItem});
-            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-            this.viewToolStripMenuItem.Size = new System.Drawing.Size(65, 29);
-            this.viewToolStripMenuItem.Text = "View";
-            // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
@@ -109,6 +89,15 @@
             this.openProjectToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
             this.openProjectToolStripMenuItem.Text = "Open Project";
             // 
+            // toolsToolStripMenuItem
+            // 
+            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.runToolStripMenuItem,
+            this.pauseToolStripMenuItem});
+            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(69, 29);
+            this.toolsToolStripMenuItem.Text = "Tools";
+            // 
             // runToolStripMenuItem
             // 
             this.runToolStripMenuItem.Name = "runToolStripMenuItem";
@@ -120,6 +109,52 @@
             this.pauseToolStripMenuItem.Name = "pauseToolStripMenuItem";
             this.pauseToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
             this.pauseToolStripMenuItem.Text = "Pause";
+            // 
+            // viewToolStripMenuItem
+            // 
+            this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ramToolStripMenuItem,
+            this.registersToolStripMenuItem,
+            this.videoToolStripMenuItem,
+            this.cartridgeHeaderToolStripMenuItem,
+            this.paletteViewerToolStripMenuItem,
+            this.debuggerToolStripMenuItem});
+            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
+            this.viewToolStripMenuItem.Size = new System.Drawing.Size(65, 29);
+            this.viewToolStripMenuItem.Text = "View";
+            // 
+            // ramToolStripMenuItem
+            // 
+            this.ramToolStripMenuItem.Name = "ramToolStripMenuItem";
+            this.ramToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.ramToolStripMenuItem.Text = "Ram";
+            // 
+            // registersToolStripMenuItem
+            // 
+            this.registersToolStripMenuItem.Name = "registersToolStripMenuItem";
+            this.registersToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.registersToolStripMenuItem.Text = "Registers";
+            // 
+            // videoToolStripMenuItem
+            // 
+            this.videoToolStripMenuItem.Name = "videoToolStripMenuItem";
+            this.videoToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.videoToolStripMenuItem.Text = "Video";
+            this.videoToolStripMenuItem.Click += new System.EventHandler(this.VideoToolStripMenuItem_Click);
+            // 
+            // cartridgeHeaderToolStripMenuItem
+            // 
+            this.cartridgeHeaderToolStripMenuItem.Name = "cartridgeHeaderToolStripMenuItem";
+            this.cartridgeHeaderToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.cartridgeHeaderToolStripMenuItem.Text = "Cartridge Header";
+            this.cartridgeHeaderToolStripMenuItem.Click += new System.EventHandler(this.CartridgeHeaderToolStripMenuItem_Click);
+            // 
+            // paletteViewerToolStripMenuItem
+            // 
+            this.paletteViewerToolStripMenuItem.Name = "paletteViewerToolStripMenuItem";
+            this.paletteViewerToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.paletteViewerToolStripMenuItem.Text = "Palette Viewer";
+            this.paletteViewerToolStripMenuItem.Click += new System.EventHandler(this.PaletteViewerToolStripMenuItem_Click);
             // 
             // audioToolStripMenuItem
             // 
@@ -156,44 +191,18 @@
             this.dMCToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
             this.dMCToolStripMenuItem.Text = "DMC";
             // 
-            // ramToolStripMenuItem
-            // 
-            this.ramToolStripMenuItem.Name = "ramToolStripMenuItem";
-            this.ramToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
-            this.ramToolStripMenuItem.Text = "Ram";
-            // 
-            // registersToolStripMenuItem
-            // 
-            this.registersToolStripMenuItem.Name = "registersToolStripMenuItem";
-            this.registersToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
-            this.registersToolStripMenuItem.Text = "Registers";
-            // 
-            // videoToolStripMenuItem
-            // 
-            this.videoToolStripMenuItem.Name = "videoToolStripMenuItem";
-            this.videoToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
-            this.videoToolStripMenuItem.Text = "Video";
-            this.videoToolStripMenuItem.Click += new System.EventHandler(this.VideoToolStripMenuItem_Click);
-            // 
             // controlsToolStripMenuItem
             // 
             this.controlsToolStripMenuItem.Name = "controlsToolStripMenuItem";
             this.controlsToolStripMenuItem.Size = new System.Drawing.Size(95, 29);
             this.controlsToolStripMenuItem.Text = "Controls";
             // 
-            // cartridgeHeaderToolStripMenuItem
+            // debuggerToolStripMenuItem
             // 
-            this.cartridgeHeaderToolStripMenuItem.Name = "cartridgeHeaderToolStripMenuItem";
-            this.cartridgeHeaderToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
-            this.cartridgeHeaderToolStripMenuItem.Text = "Cartridge Header";
-            this.cartridgeHeaderToolStripMenuItem.Click += new System.EventHandler(this.CartridgeHeaderToolStripMenuItem_Click);
-            // 
-            // paletteViewerToolStripMenuItem
-            // 
-            this.paletteViewerToolStripMenuItem.Name = "paletteViewerToolStripMenuItem";
-            this.paletteViewerToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
-            this.paletteViewerToolStripMenuItem.Text = "Palette Viewer";
-            this.paletteViewerToolStripMenuItem.Click += new System.EventHandler(this.PaletteViewerToolStripMenuItem_Click);
+            this.debuggerToolStripMenuItem.Name = "debuggerToolStripMenuItem";
+            this.debuggerToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.debuggerToolStripMenuItem.Text = "Debugger";
+            this.debuggerToolStripMenuItem.Click += new System.EventHandler(this.DebuggerToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -232,6 +241,7 @@
         private System.Windows.Forms.ToolStripMenuItem controlsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cartridgeHeaderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem paletteViewerToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem debuggerToolStripMenuItem;
     }
 }
 

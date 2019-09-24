@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
-
+using DovotosTool.Mappers;
 
 namespace DovotosTool
 {
@@ -20,6 +20,9 @@ namespace DovotosTool
 
         public static Reload Reloaded;
         public static Color[] Palette;
+
+        public static CPU_6502 CPU;
+        public static bool initialized = false;
 
         public struct Header
         {
@@ -56,16 +59,21 @@ namespace DovotosTool
 
         public GameState()
         {
+            CPU = new CPU_6502();
+
             Palette = new Color[64];
 
             for (int i = 0; i < 64; i++)
                 Palette[i] = Color.FromArgb(colorData[i * 3], colorData[i * 3 + 1], colorData[i * 3 + 2]);
+
+          
 
         }
         public GameState(Stream s) : this()
         {
             LoadRom(s);
 
+            initialized = true;
         }
 
         public void LoadRom(Stream s)
@@ -113,6 +121,13 @@ namespace DovotosTool
             RawCHR = br.ReadBytes(8192 * header.CHRBanks);
 
             br.Close();
+
+            if (Mapper.Mappers.ContainsKey(header.mapper))
+                Cart = Mapper.Mappers[header.mapper];
+            else
+                Cart = new NROM();
+
+            CPU.Reset();
 
             Reloaded?.Invoke();
         }

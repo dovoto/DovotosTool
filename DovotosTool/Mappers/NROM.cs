@@ -10,14 +10,14 @@ namespace DovotosTool.Mappers
     {
         public NROM()
         {
-            PRGRom = new byte[GameState.header.PRGBanks * 16384];
+            PRGRom = GameState.RawPRG;
 
             chrRam = GameState.header.CHRBanks == 0;
 
             if (chrRam)
                 CHRRam = new byte[8192];
             else
-                CHRRom = new byte[GameState.header.CHRBanks * 8192];
+                CHRRom = GameState.RawCHR;
 
             if(GameState.header.PRGRam)
                 PRGRam = new byte[8192];
