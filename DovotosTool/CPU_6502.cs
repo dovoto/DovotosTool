@@ -242,7 +242,51 @@ public class CPU_6502
 
         private static void ORA(Opcode op)
         {
-            Store(op.addressMode, (byte)(GameState.CPU.A | Operand(op.addressMode)));
+            GameState.CPU.A = (byte)(GameState.CPU.A | Operand(op.addressMode));
+        }
+        private static void ADC(Opcode op)
+        {
+            GameState.CPU.A = (byte)(GameState.CPU.A + Operand(op.addressMode) + (GameState.CPU.C ? 1 : 0));
+        }
+        private static void SBC(Opcode op)
+        {
+            GameState.CPU.A = (byte)(GameState.CPU.A - Operand(op.addressMode) - (GameState.CPU.C ? 1 : 0));
+        }
+        private static void CMP(Opcode op)
+        {
+            int temp = (GameState.CPU.A - Operand(op.addressMode));
+        }
+        private static void CPX(Opcode op)
+        {
+            int temp = (GameState.CPU.X - Operand(op.addressMode));
+        }
+        private static void CPY(Opcode op)
+        {
+            int temp = (GameState.CPU.Y - Operand(op.addressMode));
+        }
+        private static void INC(Opcode op)
+        {
+            GameState.CPU.A = (byte)(GameState.CPU.A + 1);
+        }
+        private static void INX(Opcode op)
+        {
+            GameState.CPU.X = (byte)(GameState.CPU.X + 1);
+        }
+        private static void INY(Opcode op)
+        {
+            GameState.CPU.Y = (byte)(GameState.CPU.Y + 1);
+        }
+        private static void DEC(Opcode op)
+        {
+            GameState.CPU.A = (byte)(GameState.CPU.A - 1);
+        }
+        private static void DEX(Opcode op)
+        {
+            GameState.CPU.X = (byte)(GameState.CPU.X - 1);
+        }
+        private static void DEY(Opcode op)
+        {
+            GameState.CPU.Y = (byte)(GameState.CPU.Y - 1);
         }
         private static void BIT(Opcode op)
         {
@@ -255,31 +299,31 @@ public class CPU_6502
         }
         private static void AND(Opcode op)
         {
-            Store(op.addressMode, (byte)(GameState.CPU.A & Operand(op.addressMode)));
+            GameState.CPU.A = (byte)(GameState.CPU.A & Operand(op.addressMode));
         }
         private static void EOR(Opcode op)
         {
-            Store(op.addressMode, (byte)(GameState.CPU.A ^ Operand(op.addressMode)));
+            GameState.CPU.A = (byte)(GameState.CPU.A ^ Operand(op.addressMode));
         }
         private static void ASL(Opcode op)
         {
-            Store(op.addressMode, (byte)(Operand(op.addressMode)<<1));
+            GameState.CPU.A = (byte)(Operand(op.addressMode)<<1);
         }
         private static void LSR(Opcode op)
         {
-            Store(op.addressMode, (byte)(Operand(op.addressMode) >> 1));
+            GameState.CPU.A = (byte)(Operand(op.addressMode) >> 1);
         }
         private static void ROL(Opcode op)
         {
             int b = Operand(op.addressMode);
 
-            Store(op.addressMode, (byte)((b << 1) | (b >> 7)));
+            GameState.CPU.A = (byte)((b << 1) | (b >> 7));
         }
         private static void ROR(Opcode op)
         {
             int b = Operand(op.addressMode);
 
-            Store(op.addressMode, (byte)((b >> 1) | (b << 7)));
+            GameState.CPU.A = (byte)((b >> 1) | (b << 7));
         }
         private static void Invalid(Opcode op)
         {
@@ -391,36 +435,36 @@ public class CPU_6502
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
           //0x60
             new Opcode("RTS",AddressingMode.Implicit, 4, false, delegate(){;}),
-            new Opcode("ADC",AddressingMode.IndirectX, 4, false, delegate(){;}),
+            new Opcode("ADC",AddressingMode.IndirectX, 4, false, ADC),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
-            new Opcode("ADC",AddressingMode.ZeroPage, 4, false, delegate(){;}),
+            new Opcode("ADC",AddressingMode.ZeroPage, 4, false, ADC),
             new Opcode("ROR",AddressingMode.ZeroPage, 4, false, ROR),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
             new Opcode("PLA",AddressingMode.Implicit, 4, false, delegate(){;}),
-            new Opcode("ADC",AddressingMode.Immediate, 4, false, delegate(){;}),
+            new Opcode("ADC",AddressingMode.Immediate, 4, false, ADC),
             new Opcode("ROR",AddressingMode.Accumulator, 4, false, ROR),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
             new Opcode("JMP",AddressingMode.Indirect, 4, false, delegate(){;}),
-            new Opcode("ADC",AddressingMode.Absolute, 4, false, delegate(){;}),
+            new Opcode("ADC",AddressingMode.Absolute, 4, false, ADC),
             new Opcode("ROR",AddressingMode.Absolute, 4, false, ROR),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
           //0x70
             new Opcode("BVS",AddressingMode.Immediate, 4, false, delegate(){;}),
-            new Opcode("ADC",AddressingMode.IndirectY, 4, false, delegate(){;}),
+            new Opcode("ADC",AddressingMode.IndirectY, 4, false, ADC),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
-            new Opcode("ADC",AddressingMode.ZeroPageX, 4, false, delegate(){;}),
+            new Opcode("ADC",AddressingMode.ZeroPageX, 4, false, ADC),
             new Opcode("ROR",AddressingMode.ZeroPageX, 4, false, ROR),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
             new Opcode("SEI",AddressingMode.Implicit, 4, false, delegate(Opcode op){GameState.CPU.I = true; }),
-            new Opcode("ADC",AddressingMode.AbsoluteY, 4, false, delegate(){;}),
+            new Opcode("ADC",AddressingMode.AbsoluteY, 4, false, ADC),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
-            new Opcode("ADC",AddressingMode.AbsoluteX, 4, false, delegate(){;}),
+            new Opcode("ADC",AddressingMode.AbsoluteX, 4, false, ADC),
             new Opcode("ROR",AddressingMode.AbsoluteX, 4, false, ROR),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
           //0x80
@@ -432,7 +476,7 @@ public class CPU_6502
             new Opcode("STA",AddressingMode.ZeroPage, 4, false, delegate(){;}),
             new Opcode("STX",AddressingMode.ZeroPage, 4, false, delegate(){;}),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
-            new Opcode("DEY",AddressingMode.Implicit, 4, false, delegate(){;}),
+            new Opcode("DEY",AddressingMode.Implicit, 4, false, DEY),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
             new Opcode("TXA",AddressingMode.Implicit, 4, false, delegate(){;}),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
@@ -483,7 +527,7 @@ public class CPU_6502
             new Opcode("LDA",AddressingMode.ZeroPageX, 4, false, delegate(){;}),
             new Opcode("LDX",AddressingMode.ZeroPageY, 4, false, delegate(){;}),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
-            new Opcode("CLV",AddressingMode.Implicit, 4, false, delegate(){;}),
+            new Opcode("CLV",AddressingMode.Implicit, 4, false, delegate(Opcode op){GameState.CPU.V = false; }),
             new Opcode("LDA",AddressingMode.AbsoluteY, 4, false, delegate(){;}),
             new Opcode("TSX",AddressingMode.Implicit, 4, false, delegate(){;}),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
@@ -492,72 +536,72 @@ public class CPU_6502
             new Opcode("LDX",AddressingMode.AbsoluteY, 4, false, delegate(){;}),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
           //0xC0
-            new Opcode("CPY",AddressingMode.Immediate, 4, false, delegate(){;}),
-            new Opcode("CMP",AddressingMode.IndirectX, 4, false, delegate(){;}),
+            new Opcode("CPY",AddressingMode.Immediate, 4, false, CPY),
+            new Opcode("CMP",AddressingMode.IndirectX, 4, false, CMP),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
-            new Opcode("CPY",AddressingMode.ZeroPage, 4, false, delegate(){;}),
-            new Opcode("CMP",AddressingMode.ZeroPage, 4, false, delegate(){;}),
-            new Opcode("DEC",AddressingMode.ZeroPage, 4, false, delegate(){;}),
+            new Opcode("CPY",AddressingMode.ZeroPage, 4, false, CPY),
+            new Opcode("CMP",AddressingMode.ZeroPage, 4, false, CMP),
+            new Opcode("DEC",AddressingMode.ZeroPage, 4, false, DEC),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
-            new Opcode("INY",AddressingMode.Implicit, 4, false, delegate(){;}),
-            new Opcode("CMP",AddressingMode.Immediate, 4, false, delegate(){;}),
-            new Opcode("DEX",AddressingMode.Implicit, 4, false, delegate(){;}),
+            new Opcode("INY",AddressingMode.Implicit, 4, false, INY),
+            new Opcode("CMP",AddressingMode.Immediate, 4, false, CMP),
+            new Opcode("DEX",AddressingMode.Implicit, 4, false, DEX),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
-            new Opcode("CPY",AddressingMode.Absolute, 4, false, delegate(){;}),
-            new Opcode("CMP",AddressingMode.Absolute, 4, false, delegate(){;}),
-            new Opcode("DEC",AddressingMode.Absolute, 4, false, delegate(){;}),
+            new Opcode("CPY",AddressingMode.Absolute, 4, false, CPY),
+            new Opcode("CMP",AddressingMode.Absolute, 4, false, CMP),
+            new Opcode("DEC",AddressingMode.Absolute, 4, false, DEC),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
           //0xD0
             new Opcode("BNE",AddressingMode.Immediate, 4, false, delegate(){;}),
-            new Opcode("CMP",AddressingMode.IndirectY, 4, false, delegate(){;}),
+            new Opcode("CMP",AddressingMode.IndirectY, 4, false, CMP),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
-            new Opcode("CMP",AddressingMode.ZeroPageX, 4, false, delegate(){;}),
-            new Opcode("DEC",AddressingMode.ZeroPageX, 4, false, delegate(){;}),
+            new Opcode("CMP",AddressingMode.ZeroPageX, 4, false, CMP),
+            new Opcode("DEC",AddressingMode.ZeroPageX, 4, false, DEC),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
-            new Opcode("CLD",AddressingMode.Implicit, 4, false, delegate(){;}),
-            new Opcode("CMP",AddressingMode.AbsoluteY, 4, false, delegate(){;}),
+            new Opcode("CLD",AddressingMode.Implicit, 4, false, delegate(Opcode op){GameState.CPU.D = false; }),
+            new Opcode("CMP",AddressingMode.AbsoluteY, 4, false, CMP),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
-            new Opcode("CMP",AddressingMode.AbsoluteX, 4, false, delegate(){;}),
-            new Opcode("DEC",AddressingMode.AbsoluteX, 4, false, delegate(){;}),
+            new Opcode("CMP",AddressingMode.AbsoluteX, 4, false, CMP),
+            new Opcode("DEC",AddressingMode.AbsoluteX, 4, false, DEC),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
           //0xE0
-            new Opcode("CPX",AddressingMode.Immediate, 4, false, delegate(){;}),
-            new Opcode("SBC",AddressingMode.IndirectX, 4, false, delegate(){;}),
+            new Opcode("CPX",AddressingMode.Immediate, 4, false, CPX),
+            new Opcode("SBC",AddressingMode.IndirectX, 4, false, SBC),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
-            new Opcode("CPX",AddressingMode.ZeroPage, 4, false, delegate(){;}),
-            new Opcode("SBC",AddressingMode.ZeroPage, 4, false, delegate(){;}),
-            new Opcode("INC",AddressingMode.ZeroPage, 4, false, delegate(){;}),
+            new Opcode("CPX",AddressingMode.ZeroPage, 4, false, CPX),
+            new Opcode("SBC",AddressingMode.ZeroPage, 4, false, SBC),
+            new Opcode("INC",AddressingMode.ZeroPage, 4, false, INC),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
-            new Opcode("INX",AddressingMode.Implicit, 4, false, delegate(){;}),
-            new Opcode("SBC",AddressingMode.Immediate, 4, false, delegate(){;}),
-            new Opcode("NOP",AddressingMode.Implicit, 4, false, delegate(){;}),
+            new Opcode("INX",AddressingMode.Implicit, 4, false, INX),
+            new Opcode("SBC",AddressingMode.Immediate, 4, false, SBC),
+            new Opcode("NOP",AddressingMode.Implicit, 4, false, delegate(Opcode op){}),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
-            new Opcode("CPX",AddressingMode.Absolute, 4, false, delegate(){;}),
-            new Opcode("SBC",AddressingMode.Absolute, 4, false, delegate(){;}),
-            new Opcode("INC",AddressingMode.Absolute, 4, false, delegate(){;}),
+            new Opcode("CPX",AddressingMode.Absolute, 4, false, CPX),
+            new Opcode("SBC",AddressingMode.Absolute, 4, false, SBC),
+            new Opcode("INC",AddressingMode.Absolute, 4, false, INC),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
             //0XF0
             new Opcode("BEQ",AddressingMode.Immediate, 4, false, delegate(){;}),
-            new Opcode("SBC",AddressingMode.IndirectY, 4, false, delegate(){;}),
+            new Opcode("SBC",AddressingMode.IndirectY, 4, false, SBC),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
-            new Opcode("SBC",AddressingMode.ZeroPageX, 4, false, delegate(){;}),
-            new Opcode("INC",AddressingMode.ZeroPageX, 4, false, delegate(){;}),
+            new Opcode("SBC",AddressingMode.ZeroPageX, 4, false, SBC),
+            new Opcode("INC",AddressingMode.ZeroPageX, 4, false, INC),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
-            new Opcode("SED",AddressingMode.Implicit, 4, false, delegate(){;}),
-            new Opcode("SBC",AddressingMode.AbsoluteY, 4, false, delegate(){;}),
+            new Opcode("SED",AddressingMode.Implicit, 4, false, delegate(Opcode op){GameState.CPU.D = true; }),
+            new Opcode("SBC",AddressingMode.AbsoluteY, 4, false, SBC),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
-            new Opcode("SBC",AddressingMode.AbsoluteX, 4, false, delegate(){;}),
-            new Opcode("INC",AddressingMode.AbsoluteX, 4, false, delegate(){;}),
+            new Opcode("SBC",AddressingMode.AbsoluteX, 4, false, SBC),
+            new Opcode("INC",AddressingMode.AbsoluteX, 4, false, INC),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
   };
     }
