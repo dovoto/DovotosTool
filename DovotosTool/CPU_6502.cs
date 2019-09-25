@@ -348,14 +348,40 @@ public class CPU_6502
 
             GameState.CPU.A = (byte)((b >> 1) | (b << 7));
         }
+       
   //  JMP - Jump to Location
   //  JSR - Jump to Location Save Return Address
   //  RTI - Return from Interrupt
   //  RTS - Return from Subroutine    
         private static void JMP(Opcode op)
         {
-          
+            int addr = 0;
+            
+            addr = GameState.Cart.CPURead(GameState.CPU.PC + 1) | (GameState.Cart.CPURead(GameState.CPU.PC + 2) << 8);
+            
+            if(op.AddressMode == AddressMode.indirect)
+            {
+                addr = GameState.Cart.CPURead(addr) | (GameState.Cart.CPURead(addr + 1) << 8);    
+            }
+            
+            GameState.CPU.PC = addr;
         }  
+        private static void JSR(Opcode op)
+        {    
+            GameState.CPU.Push((GameState.CPU.PC + 2) & 0xFF);
+            GameState.CPU.Push((GameState.CPU.PC + 3) & 0xFF);
+            GameState.CPU.PC = GameState.Cart.CPURead(GameState.CPU.PC + 1) | (GameState.Cart.CPURead(GameState.CPU.PC + 2) << 8);
+        }  
+        private static void RTI(Opcode op)
+        {    
+            GameState.CPU.PC = GameState.CPU.Pop() | (GameState.CPU.Pop()<<8);
+            GameState.CPU.F = GameState.CPU.Pop();
+        }
+        private static void RTS(Opcode op)
+        {    
+            GameState.CPU.PC = (GameState.CPU.Pop() | (GameState.CPU.Pop()<<8)) + 1;
+        }
+  
   //  PHA - Push A on Stack
   //  PHP - Push Processor Status on Stack
   //  PLA - Pull A from Stack
