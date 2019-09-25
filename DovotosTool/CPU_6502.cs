@@ -325,6 +325,55 @@ public class CPU_6502
 
             GameState.CPU.A = (byte)((b >> 1) | (b << 7));
         }
+        
+        private static void TXA(Opcode op)
+        {
+            GameState.CPU.A = GameState.CPU.X;
+        }
+        private static void TAX(Opcode op)
+        {
+            GameState.CPU.X = GameState.CPU.A;
+        }
+        private static void TYA(Opcode op)
+        {
+            GameState.CPU.A = GameState.CPU.Y;
+        }
+        private static void TAY(Opcode op)
+        {
+            GameState.CPU.Y = GameState.CPU.A;
+        }
+        private static void TXS(Opcode op)
+        {
+            GameState.CPU.X = GameState.CPU.SP;
+        }
+        private static void TSX(Opcode op)
+        {
+            GameState.CPU.SP = GameState.CPU.X;
+        }
+        private static void LDA(Opcode op)
+        {
+            GameState.CPU.A = (byte)(Operand(op.addressMode)
+        }
+        private static void LDX(Opcode op)
+        {
+            GameState.CPU.X = (byte)(Operand(op.addressMode)
+        }
+        private static void LDY(Opcode op)
+        {
+            GameState.CPU.Y = (byte)(Operand(op.addressMode)
+        }
+        private static void STA(Opcode op)
+        {
+            Store(op.addressMode, GameState.CPU.A);
+        }
+        private static void STX(Opcode op)
+        {
+            Store(op.addressMode, GameState.CPU.X);
+        }
+        private static void STY(Opcode op)
+        {
+            Store(op.addressMode, GameState.CPU.Y);
+        }
         private static void Invalid(Opcode op)
         {
             //do nothing
@@ -469,71 +518,71 @@ public class CPU_6502
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
           //0x80
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
-            new Opcode("STA",AddressingMode.IndirectX, 4, false, delegate(){;}),
+            new Opcode("STA",AddressingMode.IndirectX, 4, false, STA),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
-            new Opcode("STY",AddressingMode.ZeroPage, 4, false, delegate(){;}),
-            new Opcode("STA",AddressingMode.ZeroPage, 4, false, delegate(){;}),
-            new Opcode("STX",AddressingMode.ZeroPage, 4, false, delegate(){;}),
+            new Opcode("STY",AddressingMode.ZeroPage, 4, false, STY),
+            new Opcode("STA",AddressingMode.ZeroPage, 4, false, STA),
+            new Opcode("STX",AddressingMode.ZeroPage, 4, false, STX),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
             new Opcode("DEY",AddressingMode.Implicit, 4, false, DEY),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
-            new Opcode("TXA",AddressingMode.Implicit, 4, false, delegate(){;}),
+            new Opcode("TXA",AddressingMode.Implicit, 4, false, TXA),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
-            new Opcode("STY",AddressingMode.Absolute, 4, false, delegate(){;}),
-            new Opcode("STA",AddressingMode.Absolute, 4, false, delegate(){;}),
-            new Opcode("STX",AddressingMode.Absolute, 4, false, delegate(){;}),
+            new Opcode("STY",AddressingMode.Absolute, 4, false, STY),
+            new Opcode("STA",AddressingMode.Absolute, 4, false, STA),
+            new Opcode("STX",AddressingMode.Absolute, 4, false, STX),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
           //0x90
             new Opcode("BCC",AddressingMode.Immediate, 4, false, delegate(){;}),
-            new Opcode("STA",AddressingMode.IndirectY, 4, false, delegate(){;}),
+            new Opcode("STA",AddressingMode.IndirectY, 4, false, STA),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
-            new Opcode("STY",AddressingMode.ZeroPageX, 4, false, delegate(){;}),
-            new Opcode("STA",AddressingMode.ZeroPageX, 4, false, delegate(){;}),
-            new Opcode("STX",AddressingMode.ZeroPageY, 4, false, delegate(){;}),
+            new Opcode("STY",AddressingMode.ZeroPageX, 4, false, STY),
+            new Opcode("STA",AddressingMode.ZeroPageX, 4, false, STA),
+            new Opcode("STX",AddressingMode.ZeroPageY, 4, false, STX),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
-            new Opcode("TYA",AddressingMode.Implicit, 4, false, delegate(){;}),
-            new Opcode("STA",AddressingMode.AbsoluteY, 4, false, delegate(){;}),
-            new Opcode("TXS",AddressingMode.Implicit, 4, false, delegate(){;}),
+            new Opcode("TYA",AddressingMode.Implicit, 4, false, TYA),
+            new Opcode("STA",AddressingMode.AbsoluteY, 4, false, STA),
+            new Opcode("TXS",AddressingMode.Implicit, 4, false, TXS),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
-            new Opcode("STA",AddressingMode.AbsoluteX, 4, false, delegate(){;}),
+            new Opcode("STA",AddressingMode.AbsoluteX, 4, false, STA),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
           //0xA0
-            new Opcode("LDY",AddressingMode.Immediate, 4, false, delegate(){;}),
-            new Opcode("LDA",AddressingMode.IndirectX, 4, false, delegate(){;}),
-            new Opcode("LDX",AddressingMode.Immediate, 4, false, delegate(){;}),
+            new Opcode("LDY",AddressingMode.Immediate, 4, false, LDY),
+            new Opcode("LDA",AddressingMode.IndirectX, 4, false, LDA),
+            new Opcode("LDX",AddressingMode.Immediate, 4, false, LDX),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
-            new Opcode("LDY",AddressingMode.ZeroPage, 4, false, delegate(){;}),
-            new Opcode("LDA",AddressingMode.ZeroPage, 4, false, delegate(){;}),
-            new Opcode("LDX",AddressingMode.ZeroPage, 4, false, delegate(){;}),
+            new Opcode("LDY",AddressingMode.ZeroPage, 4, false, LDY),
+            new Opcode("LDA",AddressingMode.ZeroPage, 4, false, LDA),
+            new Opcode("LDX",AddressingMode.ZeroPage, 4, false, LDX),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
-            new Opcode("TAY",AddressingMode.Implicit, 4, false, delegate(){;}),
-            new Opcode("LDA",AddressingMode.Immediate, 4, false, delegate(){;}),
-            new Opcode("TAX",AddressingMode.Implicit, 4, false, delegate(){;}),
+            new Opcode("TAY",AddressingMode.Implicit, 4, false, TAY),
+            new Opcode("LDA",AddressingMode.Immediate, 4, false, LDA),
+            new Opcode("TAX",AddressingMode.Implicit, 4, false, TAX),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
-            new Opcode("LDY",AddressingMode.Absolute, 4, false, delegate(){;}),
-            new Opcode("LDA",AddressingMode.Absolute, 4, false, delegate(){;}),
-            new Opcode("LDX",AddressingMode.Absolute, 4, false, delegate(){;}),
+            new Opcode("LDY",AddressingMode.Absolute, 4, false, LDY),
+            new Opcode("LDA",AddressingMode.Absolute, 4, false, LDA),
+            new Opcode("LDX",AddressingMode.Absolute, 4, false, LDX),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
           //0xB0
             new Opcode("BCS",AddressingMode.Immediate, 4, false, delegate(){;}),
-            new Opcode("LDA",AddressingMode.IndirectY, 4, false, delegate(){;}),
+            new Opcode("LDA",AddressingMode.IndirectY, 4, false, LDA),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
-            new Opcode("LDY",AddressingMode.ZeroPageX, 4, false, delegate(){;}),
-            new Opcode("LDA",AddressingMode.ZeroPageX, 4, false, delegate(){;}),
-            new Opcode("LDX",AddressingMode.ZeroPageY, 4, false, delegate(){;}),
+            new Opcode("LDY",AddressingMode.ZeroPageX, 4, false, LDY),
+            new Opcode("LDA",AddressingMode.ZeroPageX, 4, false, LDA),
+            new Opcode("LDX",AddressingMode.ZeroPageY, 4, false, LDX),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
             new Opcode("CLV",AddressingMode.Implicit, 4, false, delegate(Opcode op){GameState.CPU.V = false; }),
-            new Opcode("LDA",AddressingMode.AbsoluteY, 4, false, delegate(){;}),
-            new Opcode("TSX",AddressingMode.Implicit, 4, false, delegate(){;}),
+            new Opcode("LDA",AddressingMode.AbsoluteY, 4, false, LDA),
+            new Opcode("TSX",AddressingMode.Implicit, 4, false, TSX),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
-            new Opcode("LDY",AddressingMode.AbsoluteX, 4, false, delegate(){;}),
-            new Opcode("LDA",AddressingMode.AbsoluteX, 4, false, delegate(){;}),
-            new Opcode("LDX",AddressingMode.AbsoluteY, 4, false, delegate(){;}),
+            new Opcode("LDY",AddressingMode.AbsoluteX, 4, false, LDY),
+            new Opcode("LDA",AddressingMode.AbsoluteX, 4, false, LDA),
+            new Opcode("LDX",AddressingMode.AbsoluteY, 4, false, LDX),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
           //0xC0
             new Opcode("CPY",AddressingMode.Immediate, 4, false, CPY),
