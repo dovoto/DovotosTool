@@ -471,57 +471,75 @@ public class CPU_6502
         private static void BCC(Opcode op)
         {
             if(!GameState.CPU.C)
+            {  
+                byte pb = GameState.CPU.PC & 0xFF00;
+                
                 GameState.CPU.PC += (sbyte)Operand(op.addressMode);
-            
+                return op.cycles + 1 + (bp == GameState.CPU.PC & 0xFF00) ? 1 : 0; 
+            }
             return op.cycles;
         }        
         private static void BCS(Opcode op)
         {
             if(GameState.CPU.C)
+            {
                 GameState.CPU.PC += (sbyte)Operand(op.addressMode);
-            
+                return op.cycles + 1 + (bp == GameState.CPU.PC & 0xFF00) ? 1 : 0;
+            }
             return op.cycles;
         } 
         private static void BEQ(Opcode op)
         {
             if(GameState.CPU.Z)
+            {
                 GameState.CPU.PC += (sbyte)Operand(op.addressMode);
-            
+                return op.cycles + 1 + (bp == GameState.CPU.PC & 0xFF00) ? 1 : 0;
+            }
             return op.cycles;
         } 
         private static void BMI(Opcode op)
         {
             if(GameState.CPU.N)
+            {
                 GameState.CPU.PC += (sbyte)Operand(op.addressMode);
-            
+                return op.cycles + 1 + (bp == GameState.CPU.PC & 0xFF00) ? 1 : 0;
+            }
             return op.cycles;
         } 
         private static void BNE(Opcode op)
         {
             if(!GameState.CPU.Z)
+            {
                 GameState.CPU.PC += (sbyte)Operand(op.addressMode);
-            
+                return op.cycles + 1 + (bp == GameState.CPU.PC & 0xFF00) ? 1 : 0;
+            }
             return op.cycles;
         } 
         private static void BPL(Opcode op)
         {
             if(!GameState.CPU.N)
+            {
                 GameState.CPU.PC += (sbyte)Operand(op.addressMode);
-            
+                return op.cycles + 1 + (bp == GameState.CPU.PC & 0xFF00) ? 1 : 0;
+            }
             return op.cycles;
         } 
         private static void BVC(Opcode op)
         {
             if(!GameState.CPU.V)
+            {
                 GameState.CPU.PC += (sbyte)Operand(op.addressMode);
-            
+                return op.cycles + 1 + (bp == GameState.CPU.PC & 0xFF00) ? 1 : 0;
+            }
             return op.cycles;
         } 
         private static void BVS(Opcode op)
         {
             if(!GameState.CPU.V)
+            {
                 GameState.CPU.PC += (sbyte)Operand(op.addressMode);
-            
+                return op.cycles + 1 + (bp == GameState.CPU.PC & 0xFF00) ? 1 : 0;
+            }
             return op.cycles;
         } 
        
