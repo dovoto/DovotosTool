@@ -69,7 +69,7 @@ public class CPU_6502
         public AddressingMode addressMode;
         public int cycles;
         public bool pageCrossPenalty;
-        public delegate void Execute(Opcode op);
+        public delegate int Execute(Opcode op);
         public Execute execute;
 
         public Opcode(string name, AddressingMode addressingMode, int cycles, bool pageCrossPenalty, Execute execute)
@@ -264,50 +264,74 @@ public class CPU_6502
         private static void ORA(Opcode op)
         {
             GameState.CPU.A = (byte)(GameState.CPU.A | Operand(op.addressMode));
+            
+            return op.cycles;
         }
         private static void ADC(Opcode op)
         {
             GameState.CPU.A = (byte)(GameState.CPU.A + Operand(op.addressMode) + (GameState.CPU.C ? 1 : 0));
+            
+            return op.cycles;
         }
         private static void SBC(Opcode op)
         {
             GameState.CPU.A = (byte)(GameState.CPU.A - Operand(op.addressMode) - (GameState.CPU.C ? 1 : 0));
+            
+            return op.cycles;
         }
         private static void CMP(Opcode op)
         {
             int temp = (GameState.CPU.A - Operand(op.addressMode));
+            
+            return op.cycles;
         }
         private static void CPX(Opcode op)
         {
             int temp = (GameState.CPU.X - Operand(op.addressMode));
+            
+            return op.cycles;
         }
         private static void CPY(Opcode op)
         {
             int temp = (GameState.CPU.Y - Operand(op.addressMode));
+            
+            return op.cycles;
         }
         private static void INC(Opcode op)
         {
             GameState.CPU.A = (byte)(GameState.CPU.A + 1);
+            
+            return op.cycles;
         }
         private static void INX(Opcode op)
         {
             GameState.CPU.X = (byte)(GameState.CPU.X + 1);
+            
+            return op.cycles;
         }
         private static void INY(Opcode op)
         {
             GameState.CPU.Y = (byte)(GameState.CPU.Y + 1);
+            
+            return op.cycles;
         }
         private static void DEC(Opcode op)
         {
             GameState.CPU.A = (byte)(GameState.CPU.A - 1);
+            
+            return op.cycles;
         }
         private static void DEX(Opcode op)
         {
             GameState.CPU.X = (byte)(GameState.CPU.X - 1);
+            
+            return op.cycles;
         }
         private static void DEY(Opcode op)
         {
             GameState.CPU.Y = (byte)(GameState.CPU.Y - 1);
+            
+            return op.cycles;
         }
        
   //Bitwise Operations
@@ -319,22 +343,34 @@ public class CPU_6502
             GameState.CPU.N = (result & (1 << 7)) != 0;
             GameState.CPU.Z = (result & GameState.CPU.A) != 0;
 
+            
+            return op.cycles;
         }
         private static void AND(Opcode op)
         {
             GameState.CPU.A = (byte)(GameState.CPU.A & Operand(op.addressMode));
+            
+            
+            return op.cycles;
         }
         private static void EOR(Opcode op)
         {
             GameState.CPU.A = (byte)(GameState.CPU.A ^ Operand(op.addressMode));
+            
+            
+            return op.cycles;
         }
         private static void ASL(Opcode op)
         {
             GameState.CPU.A = (byte)(Operand(op.addressMode)<<1);
+            
+            return op.cycles;
         }
         private static void LSR(Opcode op)
         {
             GameState.CPU.A = (byte)(Operand(op.addressMode) >> 1);
+            
+            return op.cycles;
         }
         private static void ROL(Opcode op)
         {
@@ -347,6 +383,8 @@ public class CPU_6502
             int b = Operand(op.addressMode);
 
             GameState.CPU.A = (byte)((b >> 1) | (b << 7));
+            
+            return op.cycles;
         }
        
   //  JMP - Jump to Location
@@ -365,21 +403,29 @@ public class CPU_6502
             }
             
             GameState.CPU.PC = addr;
+            
+            return op.cycles;
         }  
         private static void JSR(Opcode op)
         {    
             GameState.CPU.Push((GameState.CPU.PC + 2) & 0xFF);
             GameState.CPU.Push((GameState.CPU.PC + 3) & 0xFF);
             GameState.CPU.PC = GameState.Cart.CPURead(GameState.CPU.PC + 1) | (GameState.Cart.CPURead(GameState.CPU.PC + 2) << 8);
+        
+            return op.cycles;
         }  
         private static void RTI(Opcode op)
         {    
             GameState.CPU.PC = GameState.CPU.Pop() | (GameState.CPU.Pop()<<8);
             GameState.CPU.F = GameState.CPU.Pop();
+            
+            return op.cycles;
         }
         private static void RTS(Opcode op)
         {    
             GameState.CPU.PC = (GameState.CPU.Pop() | (GameState.CPU.Pop()<<8)) + 1;
+            
+            return op.cycles;
         }
   
   //  PHA - Push A on Stack
@@ -389,18 +435,26 @@ public class CPU_6502
         private static void PHA(Opcode op)
         {
            GameState.CPU.Push(GameState.CPU.A);
+            
+            return op.cycles;
         }  
         private static void PHP(Opcode op)
         {
            GameState.CPU.Push(GameState.CPU.F)
+               
+            return op.cycles;
         }
         private static void PLA(Opcode op)
         {
            GameState.CPU.A = GameState.CPU.POP();
+            
+            return op.cycles;
         }
         private static void PLP(Opcode op)
         {
-          GameState.CPU.F = GameState.CPU.POP();
+            GameState.CPU.F = GameState.CPU.POP();
+            
+            return op.cycles;
         }
   //  BCC - Branch on Carry Clear
   //  BCS - Branch on Carry Set
@@ -414,94 +468,135 @@ public class CPU_6502
         {
             if(!GameState.CPU.C)
                 GameState.CPU.PC += (sbyte)Operand(op.addressMode);
+            
+            return op.cycles;
         }        
         private static void BCS(Opcode op)
         {
             if(GameState.CPU.C)
                 GameState.CPU.PC += (sbyte)Operand(op.addressMode);
+            
+            return op.cycles;
         } 
         private static void BEQ(Opcode op)
         {
             if(GameState.CPU.Z)
                 GameState.CPU.PC += (sbyte)Operand(op.addressMode);
+            
+            return op.cycles;
         } 
         private static void BMI(Opcode op)
         {
             if(GameState.CPU.N)
                 GameState.CPU.PC += (sbyte)Operand(op.addressMode);
+            
+            return op.cycles;
         } 
         private static void BNE(Opcode op)
         {
             if(!GameState.CPU.Z)
                 GameState.CPU.PC += (sbyte)Operand(op.addressMode);
+            
+            return op.cycles;
         } 
         private static void BPL(Opcode op)
         {
             if(!GameState.CPU.N)
                 GameState.CPU.PC += (sbyte)Operand(op.addressMode);
+            
+            return op.cycles;
         } 
         private static void BVC(Opcode op)
         {
             if(!GameState.CPU.V)
                 GameState.CPU.PC += (sbyte)Operand(op.addressMode);
+            
+            return op.cycles;
         } 
         private static void BVS(Opcode op)
         {
             if(!GameState.CPU.V)
                 GameState.CPU.PC += (sbyte)Operand(op.addressMode);
+            
+            return op.cycles;
         } 
        
   //Storage      
         private static void TXA(Opcode op)
         {
             GameState.CPU.A = GameState.CPU.X;
+            
+            return op.cycles;
         }
         private static void TAX(Opcode op)
         {
             GameState.CPU.X = GameState.CPU.A;
+            
+            return op.cycles;
         }
         private static void TYA(Opcode op)
         {
             GameState.CPU.A = GameState.CPU.Y;
+            
+            return op.cycles;
         }
         private static void TAY(Opcode op)
         {
             GameState.CPU.Y = GameState.CPU.A;
+            
+            return op.cycles;
         }
         private static void TXS(Opcode op)
         {
             GameState.CPU.X = GameState.CPU.SP;
+            
+            return op.cycles;
         }
         private static void TSX(Opcode op)
         {
             GameState.CPU.SP = GameState.CPU.X;
+            
+            return op.cycles;
         }
         private static void LDA(Opcode op)
         {
-            GameState.CPU.A = (byte)(Operand(op.addressMode)
+            GameState.CPU.A = (byte)(Operand(op.addressMode);
+                                     
+            return op.cycles;
         }
         private static void LDX(Opcode op)
         {
-            GameState.CPU.X = (byte)(Operand(op.addressMode)
+            GameState.CPU.X = (byte)(Operand(op.addressMode);
+                                     
+            return op.cycles;
         }
         private static void LDY(Opcode op)
         {
-            GameState.CPU.Y = (byte)(Operand(op.addressMode)
+            GameState.CPU.Y = (byte)(Operand(op.addressMode);
+                                     
+            return op.cycles;
         }
         private static void STA(Opcode op)
         {
             Store(op.addressMode, GameState.CPU.A);
+            
+            return op.cycles;
         }
         private static void STX(Opcode op)
         {
             Store(op.addressMode, GameState.CPU.X);
+            
+            return op.cycles;
         }
         private static void STY(Opcode op)
         {
             Store(op.addressMode, GameState.CPU.Y);
+            
+            return op.cycles;
         }
         private static void Invalid(Opcode op)
         {
+            return 4;
             //do nothing
         }
 
@@ -532,7 +627,7 @@ public class CPU_6502
             new Opcode("ORA",AddressingMode.ZeroPageX, 4, false, ORA),
             new Opcode("ASL",AddressingMode.ZeroPageX, 4, false, ASL),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
-            new Opcode("CLC",AddressingMode.Implicit, 4, false, delegate(Opcode op){GameState.CPU.C = false; }),
+            new Opcode("CLC",AddressingMode.Implicit, 4, false, delegate(Opcode op){GameState.CPU.C = false; return op.cycles;}),
             new Opcode("ORA",AddressingMode.AbsoluteY, 4, false, ORA),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
@@ -566,7 +661,7 @@ public class CPU_6502
             new Opcode("AND",AddressingMode.ZeroPageX, 4, false, AND),
             new Opcode("ROL",AddressingMode.ZeroPageX, 4, false, ROL),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
-            new Opcode("SEC",AddressingMode.Implicit, 4, false, delegate(Opcode op){GameState.CPU.C = true; }),
+            new Opcode("SEC",AddressingMode.Implicit, 4, false, delegate(Opcode op){GameState.CPU.C = true;  return op.cycles;}),
             new Opcode("AND",AddressingMode.AbsoluteY, 4, false, AND),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
@@ -600,7 +695,7 @@ public class CPU_6502
             new Opcode("EOR",AddressingMode.ZeroPageX, 4, false, EOR),
             new Opcode("LSR",AddressingMode.ZeroPageX, 4, false, LSR),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
-            new Opcode("CLI",AddressingMode.Implicit, 4, false, delegate(Opcode op){GameState.CPU.I = false; }),
+            new Opcode("CLI",AddressingMode.Implicit, 4, false, delegate(Opcode op){GameState.CPU.I = false;  return op.cycles;}),
             new Opcode("EOR",AddressingMode.AbsoluteY, 4, false, EOR),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
@@ -634,7 +729,7 @@ public class CPU_6502
             new Opcode("ADC",AddressingMode.ZeroPageX, 4, false, ADC),
             new Opcode("ROR",AddressingMode.ZeroPageX, 4, false, ROR),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
-            new Opcode("SEI",AddressingMode.Implicit, 4, false, delegate(Opcode op){GameState.CPU.I = true; }),
+            new Opcode("SEI",AddressingMode.Implicit, 4, false, delegate(Opcode op){GameState.CPU.I = true;  return op.cycles;}),
             new Opcode("ADC",AddressingMode.AbsoluteY, 4, false, ADC),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
@@ -702,7 +797,7 @@ public class CPU_6502
             new Opcode("LDA",AddressingMode.ZeroPageX, 4, false, LDA),
             new Opcode("LDX",AddressingMode.ZeroPageY, 4, false, LDX),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
-            new Opcode("CLV",AddressingMode.Implicit, 4, false, delegate(Opcode op){GameState.CPU.V = false; }),
+            new Opcode("CLV",AddressingMode.Implicit, 4, false, delegate(Opcode op){GameState.CPU.V = false; return op.cycles; }),
             new Opcode("LDA",AddressingMode.AbsoluteY, 4, false, LDA),
             new Opcode("TSX",AddressingMode.Implicit, 4, false, TSX),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
@@ -736,7 +831,7 @@ public class CPU_6502
             new Opcode("CMP",AddressingMode.ZeroPageX, 4, false, CMP),
             new Opcode("DEC",AddressingMode.ZeroPageX, 4, false, DEC),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
-            new Opcode("CLD",AddressingMode.Implicit, 4, false, delegate(Opcode op){GameState.CPU.D = false; }),
+            new Opcode("CLD",AddressingMode.Implicit, 4, false, delegate(Opcode op){GameState.CPU.D = false; return op.cycles; }),
             new Opcode("CMP",AddressingMode.AbsoluteY, 4, false, CMP),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
@@ -770,7 +865,7 @@ public class CPU_6502
             new Opcode("SBC",AddressingMode.ZeroPageX, 4, false, SBC),
             new Opcode("INC",AddressingMode.ZeroPageX, 4, false, INC),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
-            new Opcode("SED",AddressingMode.Implicit, 4, false, delegate(Opcode op){GameState.CPU.D = true; }),
+            new Opcode("SED",AddressingMode.Implicit, 4, false, delegate(Opcode op){GameState.CPU.D = true;  return op.cycles;}),
             new Opcode("SBC",AddressingMode.AbsoluteY, 4, false, SBC),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
             new Opcode("invalid",AddressingMode.Implicit, 4, false, Invalid),
