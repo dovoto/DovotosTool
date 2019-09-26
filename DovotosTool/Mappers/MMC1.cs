@@ -19,22 +19,22 @@ namespace DovotosTool.Mappers
             else
                 CHRRom = new byte[GameState.header.CHRBanks * 8192];
         }
-        public override byte CPURead(int address)
+        public override byte CPUReadExt(int address)
         {
             throw new NotImplementedException();
         }
 
-        public override void CPUWrite(byte d, int address)
+        public override void CPUWriteExt(byte d, int address)
         {
             throw new NotImplementedException();
         }
 
-        public override byte PPURead(int address)
+        public override byte PPUReadExt(int address)
         {
             throw new NotImplementedException();
         }
 
-        public override void PPUWrite(byte d, int address)
+        public override void PPUWriteExt(byte d, int address)
         {
             throw new NotImplementedException();
         }

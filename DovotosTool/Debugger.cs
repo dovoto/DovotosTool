@@ -21,9 +21,70 @@ namespace DovotosTool
             Redraw();
         }
 
-        private void TbGoto_TextChanged(object sender, EventArgs e)
+ 
+
+        private void Redraw()
         {
-            try {
+            if (!GameState.initialized) return;
+
+            int index = GameState.CPU.PC;
+
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = 0; i < 40; i++)
+            {
+                CPU_6502.Opcode op = CPU_6502.Opcode.Opcodes[GameState.Cart.CPURead(index)];
+
+                sb.Append(string.Format("{0:X4}: ", index));
+
+                for (int c = 0; c < 3; c++)
+                {
+                    if (c <= op.Size()-1)
+                        sb.Append(string.Format("{0:X2} ", GameState.Cart.CPURead(index + c)));
+                    else
+                        sb.Append("   ");
+
+                }
+
+                sb.Append("\t");
+
+                sb.Append(op.Dissassemble(index));
+
+                sb.Append(Environment.NewLine);
+
+                index += op.Size();
+
+            }
+
+            tbDissassemble.Text = sb.ToString();
+
+            tbA.Text = string.Format("{0:X2}", GameState.CPU.A);
+            tbX.Text = string.Format("{0:X2}", GameState.CPU.X);
+            tbY.Text = string.Format("{0:X2}", GameState.CPU.Y);
+            tbSP.Text = string.Format("{0:X2}", GameState.CPU.SP);
+            tbF.Text = string.Format("{0:X2}", GameState.CPU.F);
+            tbPC.Text = string.Format("{0:X4}", GameState.CPU.PC);
+
+            cbN.Checked = GameState.CPU.N;
+            cbI.Checked = GameState.CPU.I;
+            cbV.Checked = GameState.CPU.V;
+            cbZ.Checked = GameState.CPU.Z;
+            cbC.Checked = GameState.CPU.C;
+
+            sb.Clear();
+
+            for(int i = 0; i < 64; i++)
+            {
+                sb.Append(string.Format("{0:X2}", GameState.Cart.CPURead(i + 0x100)) + Environment.NewLine);
+            }
+
+            tbStack.Text = sb.ToString();
+        }
+
+        private void BtnGoto_Click(object sender, EventArgs e)
+        {
+            try
+            {
                 GameState.CPU.PC = Convert.ToInt32(tbGoto.Text, 16);
             }
             catch
@@ -32,41 +93,18 @@ namespace DovotosTool
             }
 
             Redraw();
-
         }
 
-        private void Redraw()
+        private void BtnReset_Click(object sender, EventArgs e)
         {
-            if (!GameState.initialized) return;
+            GameState.CPU.Reset();
+            Redraw();
+        }
 
-            StringBuilder sb = new StringBuilder();
-
-            for (int i = 0; i < 20; i++)
-            {
-                CPU_6502.Opcode op = CPU_6502.Opcode.Opcodes[GameState.Cart.CPURead(GameState.CPU.PC)];
-
-                sb.Append(string.Format("{0:X4}: ", GameState.CPU.PC));
-
-                for (int c = 0; c < 3; c++)
-                {
-                    if (c <= op.Size()-1)
-                        sb.Append(string.Format("{0:X2} ", GameState.Cart.CPURead(GameState.CPU.PC + c)));
-                    else
-                        sb.Append("   ");
-
-                }
-
-                sb.Append("\t");
-
-                sb.Append(op.Dissassemble());
-
-                sb.Append(Environment.NewLine);
-
-                GameState.CPU.PC += op.Size();
-
-            }
-
-            tbDissassemble.Text = sb.ToString();
+        private void BtnStep_Click(object sender, EventArgs e)
+        {
+            GameState.CPU.Execute();
+            Redraw();
         }
     }
 }
