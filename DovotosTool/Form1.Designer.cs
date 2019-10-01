@@ -48,6 +48,7 @@
             this.dMCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.controlsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.debuggerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.memoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -118,7 +119,8 @@
             this.videoToolStripMenuItem,
             this.cartridgeHeaderToolStripMenuItem,
             this.paletteViewerToolStripMenuItem,
-            this.debuggerToolStripMenuItem});
+            this.debuggerToolStripMenuItem,
+            this.memoryToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(65, 29);
             this.viewToolStripMenuItem.Text = "View";
@@ -153,7 +155,7 @@
             // 
             this.paletteViewerToolStripMenuItem.Name = "paletteViewerToolStripMenuItem";
             this.paletteViewerToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
-            this.paletteViewerToolStripMenuItem.Text = "Palette Viewer";
+            this.paletteViewerToolStripMenuItem.Text = "Palette";
             this.paletteViewerToolStripMenuItem.Click += new System.EventHandler(this.PaletteViewerToolStripMenuItem_Click);
             // 
             // audioToolStripMenuItem
@@ -204,6 +206,13 @@
             this.debuggerToolStripMenuItem.Text = "Debugger";
             this.debuggerToolStripMenuItem.Click += new System.EventHandler(this.DebuggerToolStripMenuItem_Click);
             // 
+            // memoryToolStripMenuItem
+            // 
+            this.memoryToolStripMenuItem.Name = "memoryToolStripMenuItem";
+            this.memoryToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.memoryToolStripMenuItem.Text = "Memory";
+            this.memoryToolStripMenuItem.Click += new System.EventHandler(this.MemoryToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -242,6 +251,7 @@
         private System.Windows.Forms.ToolStripMenuItem cartridgeHeaderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem paletteViewerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem debuggerToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem memoryToolStripMenuItem;
     }
 }
 

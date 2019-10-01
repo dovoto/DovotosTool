@@ -12,16 +12,21 @@ namespace DovotosTool
 {
     public partial class Debugger : Form
     {
+        public int cycles = 0;
+
         public Debugger()
         {
             InitializeComponent();
 
             tbGoto.Text = string.Format("{0:X4}", GameState.CPU.PC);
 
+            Step += Redraw;
+
             Redraw();
         }
 
- 
+        public delegate void StepHandler();
+        public static StepHandler Step;
 
         private void Redraw()
         {
@@ -39,7 +44,7 @@ namespace DovotosTool
 
                 for (int c = 0; c < 3; c++)
                 {
-                    if (c <= op.Size()-1)
+                    if (c <= op.Size() - 1)
                         sb.Append(string.Format("{0:X2} ", GameState.Cart.CPURead(index + c)));
                     else
                         sb.Append("   ");
@@ -73,12 +78,18 @@ namespace DovotosTool
 
             sb.Clear();
 
-            for(int i = 0; i < 64; i++)
+            for (int i = 0; i < 64; i++)
             {
                 sb.Append(string.Format("{0:X2}", GameState.Cart.CPURead(i + 0x100)) + Environment.NewLine);
             }
 
             tbStack.Text = sb.ToString();
+
+            lblCyclesTillFrame.Text = (PPU.CyclesPerLine * (PPU.Scanlines - PPU.Scanline) - cycles).ToString();
+            lblCyclesTillLine.Text = (((PPU.Scanline + 1) * PPU.CyclesPerLine) - cycles).ToString();
+            lblCyclesTillVblank.Text = (PPU.CyclesPerLine * (241 - PPU.Scanline) - cycles).ToString();
+            lblLineNumber.Text = PPU.Scanline.ToString();
+
         }
 
         private void BtnGoto_Click(object sender, EventArgs e)
@@ -98,13 +109,38 @@ namespace DovotosTool
         private void BtnReset_Click(object sender, EventArgs e)
         {
             GameState.CPU.Reset();
-            Redraw();
+            Step();
         }
 
         private void BtnStep_Click(object sender, EventArgs e)
         {
-            GameState.CPU.Execute();
-            Redraw();
+            cycles += GameState.CPU.Execute();
+
+            if (cycles >= ((PPU.Scanline + 1) * PPU.CyclesPerLine))
+            {
+                PPU.RenderLine();
+            }
+
+            Step();
+        }
+
+        private void RunOneLine()
+        {
+
+
+            while (cycles < ((PPU.Scanline + 1) * PPU.CyclesPerLine))
+            {
+                cycles += GameState.CPU.Execute();
+
+            }
+
+            PPU.RenderLine();
+        }
+
+        private void BtnOneLine_Click(object sender, EventArgs e)
+        {
+            RunOneLine();
+            Step();
         }
     }
 }

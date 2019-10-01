@@ -66,5 +66,12 @@ namespace DovotosTool
 
             f.Show();
         }
+
+        private void MemoryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form f = new MemoryViewer();
+
+            f.Show();
+        }
     }
 }

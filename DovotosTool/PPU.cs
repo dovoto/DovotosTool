@@ -34,6 +34,7 @@ namespace DovotosTool
 
         public const int Scanlines = 262;
         public const int CyclesPerLine = 114;
+        public const int CyclesPerFrame = Scanlines * CyclesPerLine;
 
         public static byte syLatch;
 
@@ -136,9 +137,10 @@ namespace DovotosTool
                 case 2:
                     scrollLatch = false;
                     addressLatch = false;
-                    reg2002_status &= (byte)((~1 << 7) & 0xFF);
+                    byte temp = reg2002_status;
+                    reg2002_status &= (byte)(~(1 << 7) & 0xFF);
 
-                    return reg2002_status;
+                    return temp;
 
                 case 3:
                     return reg2003_oamAddress;

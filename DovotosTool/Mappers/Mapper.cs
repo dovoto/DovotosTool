@@ -44,7 +44,10 @@ namespace DovotosTool
             {
                 return CPURam[address & 0x7FF];
             }
-
+            else if (address >= 0x2000 && address <= 0x2007)
+            {
+                return PPU.Read(address);
+            }
             return 0xFF;
         }
 
@@ -62,6 +65,10 @@ namespace DovotosTool
             else if (address < 0x800)
             {
                 CPURam[address & 0x7FF] = d;
+            }
+            else if (address >= 0x2000 && address <= 0x2007)
+            {
+                PPU.Write(address,d);
             }
         }
 

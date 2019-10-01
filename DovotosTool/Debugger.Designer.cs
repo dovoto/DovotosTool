@@ -61,6 +61,14 @@
             this.btnOneLine = new System.Windows.Forms.Button();
             this.btnGoto = new System.Windows.Forms.Button();
             this.btnOneFrame = new System.Windows.Forms.Button();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.lblCyclesTillLine = new System.Windows.Forms.Label();
+            this.lblCyclesTillFrame = new System.Windows.Forms.Label();
+            this.lblCyclesTillVblank = new System.Windows.Forms.Label();
+            this.lblLineNumber = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // tbDissassemble
@@ -334,6 +342,7 @@
             this.btnOneLine.TabIndex = 31;
             this.btnOneLine.Text = "One Line";
             this.btnOneLine.UseVisualStyleBackColor = true;
+            this.btnOneLine.Click += new System.EventHandler(this.BtnOneLine_Click);
             // 
             // btnGoto
             // 
@@ -354,11 +363,91 @@
             this.btnOneFrame.Text = "One Frame";
             this.btnOneFrame.UseVisualStyleBackColor = true;
             // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(949, 545);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(135, 20);
+            this.label13.TabIndex = 34;
+            this.label13.Text = "Cycles till next line";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(949, 565);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(152, 20);
+            this.label14.TabIndex = 35;
+            this.label14.Text = "Cycles till next frame";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(949, 585);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(156, 20);
+            this.label15.TabIndex = 36;
+            this.label15.Text = "Cycles till next vblank";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(949, 620);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(39, 20);
+            this.label16.TabIndex = 37;
+            this.label16.Text = "Line";
+            // 
+            // lblCyclesTillLine
+            // 
+            this.lblCyclesTillLine.AutoSize = true;
+            this.lblCyclesTillLine.Location = new System.Drawing.Point(1120, 545);
+            this.lblCyclesTillLine.Name = "lblCyclesTillLine";
+            this.lblCyclesTillLine.Size = new System.Drawing.Size(18, 20);
+            this.lblCyclesTillLine.TabIndex = 38;
+            this.lblCyclesTillLine.Text = "0";
+            // 
+            // lblCyclesTillFrame
+            // 
+            this.lblCyclesTillFrame.AutoSize = true;
+            this.lblCyclesTillFrame.Location = new System.Drawing.Point(1120, 565);
+            this.lblCyclesTillFrame.Name = "lblCyclesTillFrame";
+            this.lblCyclesTillFrame.Size = new System.Drawing.Size(18, 20);
+            this.lblCyclesTillFrame.TabIndex = 39;
+            this.lblCyclesTillFrame.Text = "0";
+            // 
+            // lblCyclesTillVblank
+            // 
+            this.lblCyclesTillVblank.AutoSize = true;
+            this.lblCyclesTillVblank.Location = new System.Drawing.Point(1120, 585);
+            this.lblCyclesTillVblank.Name = "lblCyclesTillVblank";
+            this.lblCyclesTillVblank.Size = new System.Drawing.Size(18, 20);
+            this.lblCyclesTillVblank.TabIndex = 40;
+            this.lblCyclesTillVblank.Text = "0";
+            // 
+            // lblLineNumber
+            // 
+            this.lblLineNumber.AutoSize = true;
+            this.lblLineNumber.Location = new System.Drawing.Point(1120, 620);
+            this.lblLineNumber.Name = "lblLineNumber";
+            this.lblLineNumber.Size = new System.Drawing.Size(18, 20);
+            this.lblLineNumber.TabIndex = 41;
+            this.lblLineNumber.Text = "0";
+            // 
             // Debugger
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1281, 925);
+            this.Controls.Add(this.lblLineNumber);
+            this.Controls.Add(this.lblCyclesTillVblank);
+            this.Controls.Add(this.lblCyclesTillFrame);
+            this.Controls.Add(this.lblCyclesTillLine);
+            this.Controls.Add(this.label16);
+            this.Controls.Add(this.label15);
+            this.Controls.Add(this.label14);
+            this.Controls.Add(this.label13);
             this.Controls.Add(this.btnOneFrame);
             this.Controls.Add(this.btnGoto);
             this.Controls.Add(this.btnOneLine);
@@ -434,5 +523,13 @@
         private System.Windows.Forms.Button btnOneLine;
         private System.Windows.Forms.Button btnGoto;
         private System.Windows.Forms.Button btnOneFrame;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Label lblCyclesTillLine;
+        private System.Windows.Forms.Label lblCyclesTillFrame;
+        private System.Windows.Forms.Label lblCyclesTillVblank;
+        private System.Windows.Forms.Label lblLineNumber;
     }
 }

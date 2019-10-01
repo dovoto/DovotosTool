@@ -69,6 +69,12 @@
     <Compile Include="Mappers\Mapper.cs" />
     <Compile Include="Mappers\MMC1.cs" />
     <Compile Include="Mappers\NROM.cs" />
+    <Compile Include="MemoryViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MemoryViewer.Designer.cs">
+      <DependentUpon>MemoryViewer.cs</DependentUpon>
+    </Compile>
     <Compile Include="PaletteViewer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -92,6 +98,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MemoryViewer.resx">
+      <DependentUpon>MemoryViewer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PaletteViewer.resx">
       <DependentUpon>PaletteViewer.cs</DependentUpon>
