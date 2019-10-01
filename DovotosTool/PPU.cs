@@ -66,14 +66,25 @@ namespace DovotosTool
 
 
                 FetchSprites();
-
+                // There is a lot of room to optimize this line render...but we will let the compiler do its best for                   
+                // the moment
                 for (int x = 0; x < 256; x++)
                 {
                     int tileIndex = (((x + sx) & 0xFF) / 8) + (((Scanline + sy) & 0xFF) / 8) * 32;
 
-                    byte charIndex = GameState.Cart.PPURead(tileIndex + 0x2000);
+                    int charIndex = GameState.Cart.PPURead(tileIndex + 0x2000) * 2;
+   
+                    int attributeIndex = (((x + sx) & 0xFF) / 32) + (((Scanline + sy) & 0xFF) / 32) * 8;
 
+                    int attributeBits = GameState.Cart.PPURead(attributeIndex + 0x2000 + 960);
 
+                    int characterBits0 = GameState.Cart.PPURead(charIndex + ((Scanline + sy)&0x7) * 2);
+                    int characterBits1 = GameState.Cart.PPURead(charIndex + ((Scanline + sy)&0x7) * 2 + 1);
+
+                    int colorIndex =   characterBits0  >> (1 - ((x + sx)&0x7)) & 1 |
+                                       characterBits1  >> (1 - ((x + sx)&0x7) - 1) & 2;
+
+                   
                 }
             }
             else if (Scanline == 241)
