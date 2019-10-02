@@ -15,8 +15,8 @@ Current progress (this project is only about 8 hours of work old as of 10/2/19).
 
 6502: fully implemented.  Very buggy.  Some cycle innacuracy for page crossing memory accesses.
 
--NES PPU: partially implemented.  No useful output yet.
--NES APU: not started
--NES Mappers: NROM fully implemented (probably buggy)...will add mappers for interesting games
--Dissassembler: works, uggly
--Assembler: not started
+ *NES PPU: partially implemented.  No useful output yet.
+ *NES APU: not started
+ *NES Mappers: NROM fully implemented (probably buggy)...will add mappers for interesting games
+ *Dissassembler: works, uggly
+ *Assembler: not started
