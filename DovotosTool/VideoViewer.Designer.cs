@@ -91,9 +91,10 @@
             // 
             // pbPPU
             // 
-            this.pbPPU.Location = new System.Drawing.Point(6, 6);
+            this.pbPPU.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbPPU.Location = new System.Drawing.Point(3, 3);
             this.pbPPU.Name = "pbPPU";
-            this.pbPPU.Size = new System.Drawing.Size(512, 512);
+            this.pbPPU.Size = new System.Drawing.Size(679, 575);
             this.pbPPU.TabIndex = 0;
             this.pbPPU.TabStop = false;
             // 

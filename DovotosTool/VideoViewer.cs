@@ -35,6 +35,10 @@ namespace DovotosTool
 
             GameState.Reloaded += Redraw;
 
+            pbPPU.Image = PPU.VideoOutput;
+
+            Debugger.Step += Redraw;
+
             Redraw();
         }
 
@@ -83,6 +87,8 @@ namespace DovotosTool
 
         private void Redraw()
         {
+            pbPPU.Image = PPU.VideoOutput;
+
             if (GameState.RawCHR != null && GameState.RawCHR.Length >= 4096)
             {
 
@@ -97,7 +103,7 @@ namespace DovotosTool
                     {
                         int p0 = GameState.RawCHR[t * (8 * 2) + ty  + bank * 8192 + address * 4096];
                         int p1 = GameState.RawCHR[t * (8 * 2) + 8 + ty  + bank * 8192 + address * 4096];
-
+                        //this is dumb...find time to stop doing it
                         for (int i = 0; i < 4; i++)
                         {
                             x = (t % 16) * 32;

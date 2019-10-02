@@ -14,6 +14,10 @@ namespace DovotosTool
     {
         public int cycles = 0;
 
+        private bool executeing = false;
+
+        BackgroundWorker bw = new BackgroundWorker();
+
         public Debugger()
         {
             InitializeComponent();
@@ -22,7 +26,13 @@ namespace DovotosTool
 
             Step += Redraw;
 
+            bw.DoWork += Bw_DoWork;
             Redraw();
+        }
+
+        private void Bw_DoWork(object sender, DoWorkEventArgs e)
+        {
+            Run();
         }
 
         public delegate void StepHandler();
@@ -116,9 +126,10 @@ namespace DovotosTool
         {
             cycles += GameState.CPU.Execute();
 
-            if (cycles >= ((PPU.Scanline + 1) * PPU.CyclesPerLine))
+            if (cycles >= PPU.CyclesPerLine)
             {
                 PPU.RenderLine();
+                cycles = 0;
             }
 
             Step();
@@ -126,20 +137,82 @@ namespace DovotosTool
 
         private void RunOneLine()
         {
-
-
-            while (cycles < ((PPU.Scanline + 1) * PPU.CyclesPerLine))
+            while (cycles <  PPU.CyclesPerLine)
             {
                 cycles += GameState.CPU.Execute();
-
             }
+
+            cycles = 0;
 
             PPU.RenderLine();
         }
+        private void RunOneFrame()
+        {
+            for(int i = 0; i < 262; i++)
+            {
+                RunOneLine();
+            }
+        }
 
+        private void RunToVBlank()
+        {
+            while (PPU.InVblank)
+                RunOneLine();
+            while (!PPU.InVblank)
+                RunOneLine();
+
+        }
         private void BtnOneLine_Click(object sender, EventArgs e)
         {
             RunOneLine();
+            Step();
+        }
+
+        private void BtnOneFrame_Click(object sender, EventArgs e)
+        {
+            RunOneFrame();
+            Step();
+        }
+
+        private void BtnRunToVblank_Click(object sender, EventArgs e)
+        {
+            RunToVBlank();
+            Step();
+
+        }
+        public void Stop()
+        {
+            executeing = false;
+        }
+        public void Run()
+        {
+           
+            executeing = true;
+
+            while (executeing)
+                RunOneLine();
+        }
+        private void BtnRun_Click(object sender, EventArgs e)
+        {
+            btnOneFrame.Enabled = false;
+            btnStep.Enabled = false;
+            btnRun.Enabled = false;
+            btnRunToVblank.Enabled = false;
+            btnOneLine.Enabled = false;
+            btnReset.Enabled = false;
+
+            bw.RunWorkerAsync();
+        }
+
+        private void BtnPause_Click(object sender, EventArgs e)
+        {
+            Stop();
+            btnOneFrame.Enabled = true;
+            btnStep.Enabled = true;
+            btnRun.Enabled = true;
+            btnRunToVblank.Enabled = true;
+            btnOneLine.Enabled = true;
+            btnReset.Enabled = true;
             Step();
         }
     }

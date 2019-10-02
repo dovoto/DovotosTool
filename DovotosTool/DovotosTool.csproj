@@ -84,6 +84,12 @@
     <Compile Include="PPU.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VideoOutput.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VideoOutput.Designer.cs">
+      <DependentUpon>VideoOutput.cs</DependentUpon>
+    </Compile>
     <Compile Include="VideoViewer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -114,6 +120,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="VideoOutput.resx">
+      <DependentUpon>VideoOutput.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="VideoViewer.resx">
       <DependentUpon>VideoViewer.cs</DependentUpon>
     </EmbeddedResource>

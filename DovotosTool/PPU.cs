@@ -30,7 +30,14 @@ namespace DovotosTool
 
         public static int Scanline;
 
-        public static bool InVblank;
+        public static bool InVblank
+        {
+            get { return (reg2002_status & (1 << 7)) == (1 << 7); }
+        }
+
+        public delegate void VBlankHandler();
+
+        public static VBlankHandler VBlank;
 
         public const int Scanlines = 262;
         public const int CyclesPerLine = 114;
@@ -41,15 +48,32 @@ namespace DovotosTool
         private static bool scrollLatch;
         private static bool addressLatch;
 
+        private static Bitmap videoOutput;
+        public static Bitmap VideoOutput
+        {
+            get
+            {
+                if (videoOutput == null) videoOutput = new Bitmap(256, 240); return videoOutput;
+
+            }
+        }
+
+        public PPU()
+        {
+            videoOutput = new Bitmap(256, 240);
+        }
         public static void Reset()
         {
             scrollLatch = false;
             addressLatch = false;
             Scanline = 0;
+            
         }
 
         public static void RenderLine()
         {
+            if (videoOutput == null) videoOutput = new Bitmap(256, 240);
+
             reg2002_status &= (byte)((~(1 << 5)) & 0xFF);
 
             if (Scanline == 261) //pre render
@@ -58,6 +82,8 @@ namespace DovotosTool
                 reg2002_status &= (byte)((~1 << 6) & 0xFF);
                 reg2002_status &= (byte)((~1 << 5) & 0xFF);
                 syLatch = sy;
+
+                Scanline = 0;
 
                 FetchSprites();
             }
@@ -84,12 +110,30 @@ namespace DovotosTool
                     int colorIndex =   characterBits0  >> (1 - ((x + sx)&0x7)) & 1 |
                                        characterBits1  >> (1 - ((x + sx)&0x7) - 1) & 2;
 
+                    // attribute bits are 4 16 x 16 tiles
+                    // 00 00 00 00
+                    // 4  3  2  1
+                    //
+                    //  1   2
+                    //  3   4
+                    //
+                    //
+
+                    int palIndex = attributeBits >> ((((((x + sx)/16) & 0x1)) + (((((Scanline + sy)/ 16) & 0x1)) * 2)) & 0x3)*2;
+
+
+                    Color c = GameState.Palette[PPU.Palettes[palIndex * 4 + colorIndex]];
+
+                    videoOutput.SetPixel(x, Scanline, c);
+
                    
                 }
             }
             else if (Scanline == 241)
             {
                 reg2002_status |= (1 << 7);
+
+                if (VBlank != null) VBlank();
             }
 
             Scanline++;

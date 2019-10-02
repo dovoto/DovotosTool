@@ -632,6 +632,7 @@ public class CPU_6502
                 GameState.CPU.PC += (sbyte)Operand(op.addressMode) + 2; ;
                 return op.cycles + 1 + ((bp == (GameState.CPU.PC & 0xFF00)) ? 1 : 0);
             }
+            GameState.CPU.PC += op.Size();
             return op.cycles;
         }
         private static int BPL(Opcode op)
@@ -653,6 +654,7 @@ public class CPU_6502
                 GameState.CPU.PC += (sbyte)Operand(op.addressMode) + 2; ;
                 return op.cycles + 1 + ((bp == (GameState.CPU.PC & 0xFF00)) ? 1 : 0);
             }
+            GameState.CPU.PC += op.Size();
             return op.cycles;
         }
         private static int BVS(Opcode op)
