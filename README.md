@@ -1,6 +1,6 @@
 # DovotosTool
 
-A 6502 interactive assembler, dissassembler, debugger, and emulator (and maybe some basics graphics editing functionality).
+A 6502 interactive assembler, dissassembler, debugger, profiler, and emulator (and maybe some basics graphics editing functionality).
 Current target is Nintendo Entertainment System (NES) but may expand to C64 and eventually SNES.
 
 The primary purpose of this is reverse engineering of ROMs for static recompilation to support high speed emulation on a
@@ -19,4 +19,5 @@ NES PPU: partially implemented.  No useful output yet.
 NES APU: not started  
 NES Mappers: NROM fully implemented (probably buggy)...will add mappers for interesting games  
 Dissassembler: works, uggly  
-Assembler: not started  
+Assembler: not started 
+Profiler: not started
