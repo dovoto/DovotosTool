@@ -77,12 +77,12 @@ public class CPU_6502
     public void Push(byte d)
     {
         Write(d, SP + 0x100);
-        SP++;
+        SP--;
         SP &= 0xFF;
     }
     public byte Pop()
     {
-        SP--;
+        SP++;
         SP &= 0xFF;
         return Read(SP + 0x100);
     }
@@ -179,11 +179,11 @@ public class CPU_6502
                     return GameState.Cart.CPURead(GameState.Cart.CPURead(zpAddressY) | (GameState.Cart.CPURead((zpAddressY + 1) & 0xFF) << 8));
 
                 case AddressingMode.ZeroPage:
-                    return GameState.Cart.CPURead(GameState.CPU.PC & 0xFF);
+                    return GameState.Cart.CPURead(GameState.Cart.CPURead(GameState.CPU.PC + 1));
                 case AddressingMode.ZeroPageX:
-                    return GameState.Cart.CPURead((GameState.CPU.PC + GameState.CPU.X) & 0xFF);
+                    return GameState.Cart.CPURead((GameState.Cart.CPURead(GameState.CPU.PC + 1) + GameState.CPU.X) & 0xFF);
                 case AddressingMode.ZeroPageY:
-                    return GameState.Cart.CPURead((GameState.CPU.PC + GameState.CPU.Y) & 0xFF);
+                    return GameState.Cart.CPURead((GameState.Cart.CPURead(GameState.CPU.PC + 1) + GameState.CPU.Y) & 0xFF);
                 default:
                     return 0;
             }
@@ -214,7 +214,7 @@ public class CPU_6502
                     GameState.CPU.A = d;
                     return;
                 case AddressingMode.Immediate:
-                    GameState.Cart.CPUWrite(d, GameState.CPU.PC + 1);
+                    GameState.Cart.CPUWrite(d, GameState.Cart.CPURead(GameState.CPU.PC + 1));
                     return;
 
                 case AddressingMode.IndirectX:
@@ -222,17 +222,17 @@ public class CPU_6502
                     GameState.Cart.CPUWrite(d, GameState.Cart.CPURead(zpAddressX) | (GameState.Cart.CPURead((zpAddressX + 1) & 0xFF) << 8));
                     return;
                 case AddressingMode.IndirectY:
-                    int zpAddressY = (GameState.Cart.CPURead(GameState.CPU.PC + 1) & 0xFF) + GameState.CPU.Y;
+                    int zpAddressY = (GameState.Cart.CPURead(GameState.CPU.PC + 1 & 0xFF) + GameState.CPU.Y);
                     GameState.Cart.CPUWrite(d, GameState.Cart.CPURead(zpAddressY) | (GameState.Cart.CPURead((zpAddressY + 1) & 0xFF) << 8));
                     return;
                 case AddressingMode.ZeroPage:
-                    GameState.Cart.CPUWrite(d, GameState.CPU.PC & 0xFF);
+                    GameState.Cart.CPUWrite(d, (GameState.Cart.CPURead(GameState.CPU.PC + 1)));
                     return;
                 case AddressingMode.ZeroPageX:
-                    GameState.Cart.CPUWrite(d, (GameState.CPU.PC + GameState.CPU.X) & 0xFF);
+                    GameState.Cart.CPUWrite(d, (GameState.Cart.CPURead(GameState.CPU.PC + 1) + GameState.CPU.Y) & 0xFF);
                     return;
                 case AddressingMode.ZeroPageY:
-                    GameState.Cart.CPUWrite(d, (GameState.CPU.PC + GameState.CPU.Y) & 0xFF);
+                    GameState.Cart.CPUWrite(d, (GameState.Cart.CPURead(GameState.CPU.PC + 1) + GameState.CPU.X) & 0xFF);
                     return;
                 default:
                     return;
@@ -258,7 +258,7 @@ public class CPU_6502
                 case AddressingMode.Immediate:
                     return string.Format(name + " #{0:X2}       \t;immediate", GameState.Cart.CPURead(index + 1));
                 case AddressingMode.Relative:
-                    return string.Format(name + " ${0:X4}       \t;relative", index + (sbyte)GameState.Cart.CPURead(index + 1) + 2);
+                    return string.Format(name + " ${0:X4}     \t;relative", index + (sbyte)GameState.Cart.CPURead(index + 1) + 2);
                 case AddressingMode.Indirect:
                     return string.Format(name + " (${1:X2}{0:X2} ) \t;indirect", GameState.Cart.CPURead(index + 1), GameState.Cart.CPURead(index + 2));
                 case AddressingMode.IndirectX:
@@ -383,8 +383,8 @@ public class CPU_6502
         {
             GameState.CPU.Y = (byte)(GameState.CPU.Y + 1);
 
-            GameState.CPU.N = (GameState.CPU.X & 128) == 128;
-            GameState.CPU.Z = (GameState.CPU.X == 0);
+            GameState.CPU.N = (GameState.CPU.Y & 128) == 128;
+            GameState.CPU.Z = (GameState.CPU.Y == 0);
             GameState.CPU.PC += op.Size();
             return op.cycles;
         }
@@ -522,22 +522,26 @@ public class CPU_6502
         private static int JSR(Opcode op)
         {
             GameState.CPU.Push((byte)((GameState.CPU.PC + 2) & 0xFF));
-            GameState.CPU.Push((byte)((GameState.CPU.PC + 3) & 0xFF));
+            GameState.CPU.Push((byte)(((GameState.CPU.PC + 2) >> 8) & 0xFF));
+            
             GameState.CPU.PC = GameState.Cart.CPURead(GameState.CPU.PC + 1) | (GameState.Cart.CPURead(GameState.CPU.PC + 2) << 8);
 
             return op.cycles;
         }
+
         private static int RTI(Opcode op)
         {
-            GameState.CPU.PC = GameState.CPU.Pop() | (GameState.CPU.Pop() << 8);
             GameState.CPU.F = GameState.CPU.Pop();
+            GameState.CPU.PC = ((GameState.CPU.Pop() << 8));
+            GameState.CPU.PC += GameState.CPU.Pop();
+            
 
             return op.cycles;
         }
         private static int RTS(Opcode op)
         {
-            GameState.CPU.PC = (GameState.CPU.Pop() | (GameState.CPU.Pop() << 8)) + 1;
-
+            GameState.CPU.PC = ((GameState.CPU.Pop() << 8));
+            GameState.CPU.PC += GameState.CPU.Pop() + 1;
             return op.cycles;
         }
 
@@ -670,7 +674,7 @@ public class CPU_6502
         }
 
         //Storage      
-        private static int TXA(Opcode op)
+        private static int TAX(Opcode op)
         {
             GameState.CPU.X = GameState.CPU.A;
 
@@ -679,7 +683,7 @@ public class CPU_6502
             GameState.CPU.PC += op.Size();
             return op.cycles;
         }
-        private static int TAX(Opcode op)
+        private static int TXA(Opcode op)
         {
             GameState.CPU.A = GameState.CPU.X;
 
@@ -688,7 +692,7 @@ public class CPU_6502
             GameState.CPU.PC += op.Size();
             return op.cycles;
         }
-        private static int TYA(Opcode op)
+        private static int TAY(Opcode op)
         {
             GameState.CPU.Y = GameState.CPU.A;
 
@@ -697,7 +701,7 @@ public class CPU_6502
             GameState.CPU.PC += op.Size();
             return op.cycles;
         }
-        private static int TAY(Opcode op)
+        private static int TYA(Opcode op)
         {
             GameState.CPU.A = GameState.CPU.Y;
 
@@ -1066,7 +1070,16 @@ public class CPU_6502
 
     }
 
+    public void NMI()
+    {
+        GameState.CPU.Push((byte)((GameState.CPU.PC) & 0xFF));
+        GameState.CPU.Push((byte)(((GameState.CPU.PC) >> 8) & 0xFF));
+        GameState.CPU.Push((byte)(GameState.CPU.F | (1 << 4)));
 
+        PC = GameState.Cart.CPURead(0xfffa) | (GameState.Cart.CPURead(0xfffb) << 8);
+
+        
+    }
 
 
 }

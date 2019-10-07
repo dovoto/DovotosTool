@@ -38,7 +38,7 @@ namespace DovotosTool
             }
             else if (address >= 0x6000)
             {
-                address &= 0x3FFF;
+                address &= 0x1FFF;
                 return PRGRam[address];
             }else if (address < 0x800)
             {

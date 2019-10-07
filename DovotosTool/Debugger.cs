@@ -18,6 +18,7 @@ namespace DovotosTool
 
         BackgroundWorker bw = new BackgroundWorker();
 
+        private int[] LineToAddress = new int[40];
         public Debugger()
         {
             InitializeComponent();
@@ -49,6 +50,8 @@ namespace DovotosTool
             for (int i = 0; i < 40; i++)
             {
                 CPU_6502.Opcode op = CPU_6502.Opcode.Opcodes[GameState.Cart.CPURead(index)];
+
+                LineToAddress[i] = index;
 
                 sb.Append(string.Format("{0:X4}: ", index));
 
@@ -119,6 +122,8 @@ namespace DovotosTool
         private void BtnReset_Click(object sender, EventArgs e)
         {
             GameState.CPU.Reset();
+            PPU.Reset();
+
             Step();
         }
 
@@ -129,6 +134,10 @@ namespace DovotosTool
             if (cycles >= PPU.CyclesPerLine)
             {
                 PPU.RenderLine();
+                if (PPU.Scanline == 241 && PPU.VblankNMIEnabled)
+                {
+                    GameState.CPU.NMI();
+                }
                 cycles = 0;
             }
 
@@ -140,6 +149,10 @@ namespace DovotosTool
             while (cycles <  PPU.CyclesPerLine)
             {
                 cycles += GameState.CPU.Execute();
+            }
+            if(PPU.Scanline == 241 && PPU.VblankNMIEnabled)
+            {
+                GameState.CPU.NMI();
             }
 
             cycles = 0;
@@ -214,6 +227,40 @@ namespace DovotosTool
             btnOneLine.Enabled = true;
             btnReset.Enabled = true;
             Step();
+        }
+
+        int mouseOnLine = 0;
+        private void CmDissassembly_MouseClick(object sender, MouseEventArgs e)
+        {
+            
+
+            int pc = LineToAddress[mouseOnLine];
+
+            executeing = true;
+
+            while (pc != GameState.CPU.PC && executeing)
+            {
+                cycles += GameState.CPU.Execute();
+
+                if (cycles >= PPU.CyclesPerLine)
+                {
+                    PPU.RenderLine();
+                    if (PPU.Scanline == 241 && PPU.VblankNMIEnabled)
+                    {
+                        GameState.CPU.NMI();
+                    }
+                    cycles = 0;
+                }
+            }
+
+            executeing = false;
+
+            Step();
+        }
+
+        private void TbDissassemble_MouseMove(object sender, MouseEventArgs e)
+        {
+            mouseOnLine = tbDissassemble.GetLineFromCharIndex(tbDissassemble.GetCharIndexFromPosition(e.Location));
         }
     }
 }

@@ -34,7 +34,10 @@ namespace DovotosTool
         {
             get { return (reg2002_status & (1 << 7)) == (1 << 7); }
         }
-
+        public static bool VblankNMIEnabled
+        {
+            get { return (reg2000_control & (1 << 7)) == (1 << 7); }
+        }
         public delegate void VBlankHandler();
 
         public static VBlankHandler VBlank;
@@ -49,11 +52,16 @@ namespace DovotosTool
         private static bool addressLatch;
 
         private static Bitmap videoOutput;
+        private static Bitmap backBuffer;
+
         public static Bitmap VideoOutput
         {
             get
             {
-                if (videoOutput == null) videoOutput = new Bitmap(256, 240); return videoOutput;
+                if (videoOutput == null)
+                    videoOutput = new Bitmap(256, 240);
+
+                return videoOutput;
 
             }
         }
@@ -61,6 +69,7 @@ namespace DovotosTool
         public PPU()
         {
             videoOutput = new Bitmap(256, 240);
+            backBuffer = new Bitmap(256, 240);
         }
         public static void Reset()
         {
@@ -72,9 +81,13 @@ namespace DovotosTool
 
         public static void RenderLine()
         {
-            if (videoOutput == null) videoOutput = new Bitmap(256, 240);
+            if (backBuffer == null) backBuffer = new Bitmap(256, 240);
 
             reg2002_status &= (byte)((~(1 << 5)) & 0xFF);
+
+            Scanline++;
+
+            if (Scanline == 262) Scanline = 0;
 
             if (Scanline == 261) //pre render
             {
@@ -86,6 +99,7 @@ namespace DovotosTool
                 Scanline = 0;
 
                 FetchSprites();
+
             }
             else if (Scanline >= 0 && Scanline < 240)
             {
@@ -119,12 +133,12 @@ namespace DovotosTool
                     //
                     //
 
-                    int palIndex = attributeBits >> ((((((x + sx)/16) & 0x1)) + (((((Scanline + sy)/ 16) & 0x1)) * 2)) & 0x3)*2;
+                    int palIndex = (attributeBits >> ((((((x + sx)/16) & 0x1)) + (((((Scanline + sy)/ 16) & 0x1)) * 2)) & 0x3)*2) &0x3;
 
 
                     Color c = GameState.Palette[PPU.Palettes[palIndex * 4 + colorIndex]];
 
-                    videoOutput.SetPixel(x, Scanline, c);
+                    backBuffer.SetPixel(x, Scanline, c);
 
                    
                 }
@@ -133,10 +147,16 @@ namespace DovotosTool
             {
                 reg2002_status |= (1 << 7);
 
+                Bitmap temp = backBuffer;
+                backBuffer = videoOutput;
+                videoOutput = backBuffer;
+
                 if (VBlank != null) VBlank();
+
+                
             }
 
-            Scanline++;
+            
         }
 
         private static void FetchSprites()
@@ -242,7 +262,7 @@ namespace DovotosTool
 
                     break;
                 case 6:
-                    if (!addressLatch)
+                    if (addressLatch)
                     {
                         reg2006_vramAddress &= 0xff00;
                         reg2006_vramAddress |= d;

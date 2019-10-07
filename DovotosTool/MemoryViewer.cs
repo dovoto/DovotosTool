@@ -49,6 +49,29 @@ namespace DovotosTool
             }
 
             tbSram.Text = sb.ToString();
+
+            sb = new StringBuilder();
+
+            for (int nt = 0; nt < 4; nt++)
+            {
+                sb.Append(Environment.NewLine);
+                sb.Append(string.Format("Name table 2{0:X1}00", nt * 4));
+                sb.Append(Environment.NewLine);
+
+                for (int i = 0; i < 32; i++)
+                {
+                    sb.Append(string.Format("{0:X4}: ", i * 32 + 0x2000 + nt * 0x400));
+
+                    for (int i2 = 0; i2 < 32; i2++)
+                    {
+                        sb.Append(string.Format("{0:X2} ", GameState.Cart.PPURead(i * 32 + i2 + 0x2000 + nt * 0x400)));
+                    }
+
+                    sb.Append(Environment.NewLine);
+                }
+            }
+
+            tbNameTable.Text = sb.ToString();
         }
     }
 }

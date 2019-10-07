@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.tbDissassemble = new System.Windows.Forms.TextBox();
             this.tbGoto = new System.Windows.Forms.TextBox();
             this.tbA = new System.Windows.Forms.TextBox();
@@ -70,10 +71,14 @@
             this.lblCyclesTillVblank = new System.Windows.Forms.Label();
             this.lblLineNumber = new System.Windows.Forms.Label();
             this.btnRunToVblank = new System.Windows.Forms.Button();
+            this.cmDissassembly = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.menuRunToCursor = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmDissassembly.SuspendLayout();
             this.SuspendLayout();
             // 
             // tbDissassemble
             // 
+            this.tbDissassemble.ContextMenuStrip = this.cmDissassembly;
             this.tbDissassemble.Dock = System.Windows.Forms.DockStyle.Left;
             this.tbDissassemble.Font = new System.Drawing.Font("Consolas", 10F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbDissassemble.Location = new System.Drawing.Point(0, 0);
@@ -81,6 +86,7 @@
             this.tbDissassemble.Name = "tbDissassemble";
             this.tbDissassemble.Size = new System.Drawing.Size(927, 925);
             this.tbDissassemble.TabIndex = 0;
+            this.tbDissassemble.MouseMove += new System.Windows.Forms.MouseEventHandler(this.TbDissassemble_MouseMove);
             // 
             // tbGoto
             // 
@@ -443,11 +449,26 @@
             // 
             this.btnRunToVblank.Location = new System.Drawing.Point(953, 514);
             this.btnRunToVblank.Name = "btnRunToVblank";
-            this.btnRunToVblank.Size = new System.Drawing.Size(133, 35);
+            this.btnRunToVblank.Size = new System.Drawing.Size(187, 35);
             this.btnRunToVblank.TabIndex = 42;
             this.btnRunToVblank.Text = "Run to VBLANK";
             this.btnRunToVblank.UseVisualStyleBackColor = true;
             this.btnRunToVblank.Click += new System.EventHandler(this.BtnRunToVblank_Click);
+            // 
+            // cmDissassembly
+            // 
+            this.cmDissassembly.ImageScalingSize = new System.Drawing.Size(24, 24);
+            this.cmDissassembly.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuRunToCursor});
+            this.cmDissassembly.Name = "cmDissassembly";
+            this.cmDissassembly.Size = new System.Drawing.Size(192, 36);
+            this.cmDissassembly.MouseClick += new System.Windows.Forms.MouseEventHandler(this.CmDissassembly_MouseClick);
+            // 
+            // menuRunToCursor
+            // 
+            this.menuRunToCursor.Name = "menuRunToCursor";
+            this.menuRunToCursor.Size = new System.Drawing.Size(240, 32);
+            this.menuRunToCursor.Text = "Run to cursor";
             // 
             // Debugger
             // 
@@ -498,6 +519,7 @@
             this.Controls.Add(this.tbDissassemble);
             this.Name = "Debugger";
             this.Text = "Debugger";
+            this.cmDissassembly.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -547,5 +569,7 @@
         private System.Windows.Forms.Label lblCyclesTillVblank;
         private System.Windows.Forms.Label lblLineNumber;
         private System.Windows.Forms.Button btnRunToVblank;
+        private System.Windows.Forms.ContextMenuStrip cmDissassembly;
+        private System.Windows.Forms.ToolStripMenuItem menuRunToCursor;
     }
 }
