@@ -21,22 +21,62 @@ namespace DovotosTool.Mappers
         }
         public override byte CPUReadExt(int address)
         {
-            throw new NotImplementedException();
+
+            if (GameState.header.PRGBanks == 1)
+                address &= 0x3FFF;
+            else
+                address &= 0x7FFF;
+
+            return PRGRom[address];
+
         }
 
         public override void CPUWriteExt(byte d, int address)
         {
-            throw new NotImplementedException();
+
+            if (GameState.header.PRGBanks == 1)
+                address &= 0x3FFF;
+            else
+                address &= 0x7FFF;
+
+            PRGRom[address] = d;
+
         }
 
         public override byte PPUReadExt(int address)
         {
-            throw new NotImplementedException();
+            if (address < 0x2000)
+            {
+                return chrRam ? CHRRam[address & 0x1FFF] : CHRRom[address & 0x1FFF];
+            }
+            else if (address < 0x3000)
+            {
+                //todo: mirroring
+                return PPU.PPU_RAM[address & 0x7FF];
+            }
+            else if (address >= 0x3F00 && address < 0x3f20)
+            {
+                return PPU.Palettes[address & 0x1F];
+            }
+
+            return 0xFF;
         }
 
         public override void PPUWriteExt(byte d, int address)
         {
-            throw new NotImplementedException();
+            //todo:mirroring
+            if (address < 0x2000)
+            {
+                if (chrRam) CHRRam[address & 0x1FFF] = d;
+            }
+            else if (address < 0x3000)
+            {
+                PPU.PPU_RAM[address & 0x7FF] = d;
+            }
+            else if (address >= 0x3F00 && address < 0x3f20)
+            {
+                PPU.Palettes[address & 0x1F] = d;
+            }
         }
     }
 }

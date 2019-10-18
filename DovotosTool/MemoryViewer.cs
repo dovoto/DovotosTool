@@ -72,6 +72,29 @@ namespace DovotosTool
             }
 
             tbNameTable.Text = sb.ToString();
+
+
+            sb = new StringBuilder();
+
+            for (int i = 0; i < 64 * 16; i++)
+            {
+                sb.Append(string.Format("{0:X4}: ", i * 32 + 0x8000));
+
+                for (int i2 = 0; i2 < 32; i2++)
+                {
+                    sb.Append(string.Format("{0:X2} ", GameState.Cart.CPURead(i * 32 + i2 + 0x8000)));
+                }
+                for (int i2 = 0; i2 < 32; i2++)
+                {
+                    Char c = (Char)GameState.Cart.CPURead(i * 32 + i2 + 0x8000);
+
+                    sb.Append(string.Format("{0}", (Char.IsLetter(c) || Char.IsDigit(c) || c == ' ') ? c : '.'));
+                }
+
+                sb.Append(Environment.NewLine);
+            }
+
+            tbRom.Text = sb.ToString();
         }
     }
 }

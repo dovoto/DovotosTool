@@ -66,7 +66,7 @@ namespace DovotosTool
             {
                 CPURam[address & 0x7FF] = d;
             }
-            else if (address >= 0x2000 && address <= 0x2007)
+            else if (address >= 0x2000 && address <= 0x2007 || address == 0x4014)
             {
                 PPU.Write(address,d);
             }

@@ -112,17 +112,17 @@ namespace DovotosTool
                 {
                     int tileIndex = (((x + sx) & 0xFF) / 8) + (((Scanline + sy) & 0xFF) / 8) * 32;
 
-                    int charIndex = GameState.Cart.PPURead(tileIndex + 0x2000) * 2;
+                    int charIndex = GameState.Cart.PPURead(tileIndex + 0x2000) * 16;
    
                     int attributeIndex = (((x + sx) & 0xFF) / 32) + (((Scanline + sy) & 0xFF) / 32) * 8;
 
                     int attributeBits = GameState.Cart.PPURead(attributeIndex + 0x2000 + 960);
 
-                    int characterBits0 = GameState.Cart.PPURead(charIndex + ((Scanline + sy)&0x7) * 2);
-                    int characterBits1 = GameState.Cart.PPURead(charIndex + ((Scanline + sy)&0x7) * 2 + 1);
+                    int characterBits0 = GameState.Cart.PPURead(charIndex + ((Scanline + sy)&0x7));
+                    int characterBits1 = GameState.Cart.PPURead(charIndex + ((Scanline + sy)&0x7) + 8);
 
-                    int colorIndex =   characterBits0  >> (1 - ((x + sx)&0x7)) & 1 |
-                                       characterBits1  >> (1 - ((x + sx)&0x7) - 1) & 2;
+                    int colorIndex =   ((characterBits0  >> (6-((x + sx)&0x7))) & 2) |
+                                       ((characterBits1  >> (7-((x + sx)&0x7))) & 1);
 
                     // attribute bits are 4 16 x 16 tiles
                     // 00 00 00 00
@@ -170,7 +170,7 @@ namespace DovotosTool
                 int y = OAM[i * 4];
 
 
-                if (y > line && y <= line + size)
+                if (y <= line && y + size < line)
                 {
                     if (count < 8)
                     {
@@ -237,6 +237,17 @@ namespace DovotosTool
 
         public static void Write(int address, byte d)
         {
+            if(address == 0x4014)
+            {
+                for(int i = 0; i < 256; i++)
+                {
+                    OAM[i] = GameState.Cart.CPURead(d * 0x100 + i);
+                }
+
+                GameState.CPU.DMA_cycles = 256;
+
+                return;
+            }
             switch (address & 0x7)
             {
                 case 0:

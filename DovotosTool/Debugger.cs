@@ -91,17 +91,70 @@ namespace DovotosTool
 
             sb.Clear();
 
-            for (int i = 0; i < 64; i++)
+            for (int i = 0; i < 0xFF; i++)
             {
-                sb.Append(string.Format("{0:X2}", GameState.Cart.CPURead(i + 0x100)) + Environment.NewLine);
+                sb.Append(string.Format("{1:X3}:{0:X2}{2}", GameState.Cart.CPURead(0x200-i), 0x200-i, GameState.CPU.SP == i ? " <-" : "") + Environment.NewLine);
             }
 
             tbStack.Text = sb.ToString();
 
-            lblCyclesTillFrame.Text = (PPU.CyclesPerLine * (PPU.Scanlines - PPU.Scanline) - cycles).ToString();
-            lblCyclesTillLine.Text = (((PPU.Scanline + 1) * PPU.CyclesPerLine) - cycles).ToString();
-            lblCyclesTillVblank.Text = (PPU.CyclesPerLine * (241 - PPU.Scanline) - cycles).ToString();
+            sb.Clear();
+
+            for (int i = 0; i < 0x32; i++)
+            {
+                sb.Append(string.Format("{0:X2} ", GameState.Cart.PPURead(0x3F00 + i)));
+                if(((i+1)&3) == 0) sb.Append( Environment.NewLine);
+            }
+
+            tbPalette.Text = sb.ToString();
+
+
+            sb.Clear();
+
+            for (int i = 0; i < 64; i++)
+            {
+                sb.Append(string.Format("{0:D2} : {1:X2} {2:X2} {3:X2} {4:X2}", i, PPU.OAM[i*4], PPU.OAM[i * 4 + 1], PPU.OAM[i * 4 + 3], PPU.OAM[i * 4 + 3]) + (Environment.NewLine));
+            }
+
+            tbOAM.Text = sb.ToString();
+
+            sb.Clear();
+
+            for (int i = 0; i < 8; i++)
+            {
+                sb.Append(string.Format("{0:D2} : {1:X2} {2:X2} {3:X2} {4:X2}", i, PPU.OAM_shadow[i * 4], PPU.OAM_shadow[i * 4 + 1], PPU.OAM_shadow[i * 4 + 3], PPU.OAM_shadow[i * 4 + 3]) + (Environment.NewLine));
+            }
+
+            tbOAMShadow.Text = sb.ToString();
+
             lblLineNumber.Text = PPU.Scanline.ToString();
+            lblHscoll.Text = PPU.sx.ToString();
+            lblVscroll.Text = PPU.sy.ToString();
+            lblPPUAddress.Text = string.Format("{0:X4}", PPU.reg2006_vramAddress);
+            lblPPUStatus.Text = string.Format("{0:X2}",PPU.reg2002_status);
+            lblOamAddress.Text = string.Format("{0:X4}", PPU.reg2003_oamAddress);
+
+            sb.Clear();
+
+            int[] buff = CPU_6502.CallStack.GetRing();
+
+            for (int i = 0; i < 20; i++)
+            {
+                sb.Append(string.Format("{0:X4}", buff[i]) + (Environment.NewLine));
+            }
+
+            tbCallStack.Text = sb.ToString();
+
+            sb.Clear();
+
+            buff = CPU_6502.PCStack.GetRing();
+
+            for (int i = 0; i < 20; i++)
+            {
+                sb.Append(string.Format("{0:X4}", buff[i]) + (Environment.NewLine));
+            }
+
+            tbPCStack.Text = sb.ToString();
 
         }
 
